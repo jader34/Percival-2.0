@@ -26,7 +26,7 @@ npm run ficha    # consulta JSON do cadastro e das regras
 - **Combate:** dano, cura, PV temporários, salvaguardas contra a morte em 0 PV, gasto e recuperação de Dados de Vida (`d10`), desfazer, ataques, Smite, recursos, descanso, Bênção, Véu de Sangue e ficha operacional da montaria **Pesadelo Sanguinário** (*Cavalo de Guerra* com barda de *Cota de talas*, CA 17, 19 PV e `3d10` Dados de Vida).
 - **Magias:** busca sem depender de acentos, preparação, espaços compartilhados com Smite, registro de concentração e referências curtas.
 - **Inventário:** equipar/desequipar, quantidades e consumo de poção com resultado físico informado.
-- **Ficha:** atributos, salvaguardas, perícias, características, notas e evolução. Subir de nível exige resultado de d10 e, quando necessário, escolha de atributos; não cura nem restaura gastos automaticamente.
+- **Ficha:** experiência (XP atual `18.967`, soma automática de XP ganho e progresso para o próximo nível), atributos, salvaguardas, perícias, características, notas e evolução. Subir de nível exige resultado de d10 e, quando necessário, escolha de atributos; não cura nem restaura gastos automaticamente.
 - **Ajustes:** confirmações explícitas de sintonização/perícia/magias adicionais, exportação e importação de backup validado.
 
 ## Dados e segurança

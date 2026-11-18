@@ -13,7 +13,7 @@ export const PERCIVAL: PercivalRecord = {
     hpMax: 64,
     abilities: { str: 16, dex: 10, con: 14, int: 13, wis: 12, cha: 18 },
   },
-  xp: 14000,
+  xp: 18967,
   progressionMode: 'dm-confirmed',
   diceMode: 'physical-only',
   advancements: [],
@@ -120,5 +120,5 @@ export const SOURCES = {
     },
   },
   legacy: 'C:/Users/JAJ/Documents/coisas/Programa/peric-ficha/PERCI/src/lib/defaultData.ts',
-  user: 'Confirmações da conversa: humano variante, Soldado, talento inicial de haste, +2 Carisma no nível 4, 64 PV no nível 6, d10 físico nos próximos níveis, texto do juramento do mestre e montaria Cavalo de Guerra com Cota de talas.',
+  user: 'Confirmações da conversa: humano variante, Soldado, talento inicial de haste, +2 Carisma no nível 4, 64 PV e 18.967 XP no nível 6, d10 físico nos próximos níveis, texto do juramento do mestre e montaria Cavalo de Guerra com Cota de talas.',
 };

@@ -19,7 +19,7 @@
 | Estilo de combate | Combate com Armas Grandes | Cadastro antigo; livro p.110 |
 | PV máximos no nível 6 | 64, preservados | Usuário |
 | Evolução dos PV | Informar o resultado físico de 1d10 por nível | Usuário; livro p.109 |
-| XP de referência | 14.000 | Cadastro antigo; não representa confirmação de XP da sessão atual |
+| XP atual confirmado | 18.967 | Informado pelo usuário (nível 6 → 23.000 no nível 7) |
 
 Os atributos abaixo **já incluem** os bônus anteriores ao nível 6. Não somar novamente os bônus raciais, o talento inicial nem o +2 de Carisma do nível 4. A distribuição original dos dois +1 de humano variante ainda não foi informada.
 

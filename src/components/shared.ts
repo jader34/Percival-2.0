@@ -17,6 +17,7 @@ export type Dialog =
         | "blessing"
         | "absorb"
         | "rest"
+        | "xp"
         | "settings"
         | "level"
         | "potion";

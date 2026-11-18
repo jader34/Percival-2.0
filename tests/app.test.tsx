@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { readFileSync } from "node:fs";
 import { Modal } from "../src/components/Modal.tsx";
 import { Combat } from "../src/components/Combat.tsx";
+import { Character } from "../src/components/Character.tsx";
 import { ActionDialog } from "../src/components/ActionDialog.tsx";
 import { applyAction, createAppState, getSheet } from "../src/session/state.ts";
 
@@ -128,4 +129,16 @@ test("exibe ficha da montaria com Cota de talas, Dados de Vida e salvaguardas co
   assert.match(fallenHtml, /Salvaguardas contra a morte/);
   assert.match(fallenHtml, /Sucesso \(10–19\)/);
   assert.match(fallenHtml, /20 natural \(\+1 PV\)/);
+
+  const characterHtml = renderToStaticMarkup(
+    <Character
+      state={alive}
+      sheet={getSheet(alive)}
+      act={() => true}
+      open={() => {}}
+    />,
+  );
+  assert.match(characterHtml, /Experiência/);
+  assert.match(characterHtml, /18\.967/);
+  assert.match(characterHtml, /Somar XP/);
 });

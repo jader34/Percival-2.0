@@ -97,8 +97,17 @@ function loadLocal() {
       typeof window === "undefined"
         ? null
         : window.localStorage.getItem(STORAGE_KEY);
+    if (!saved) return { state: createAppState(), issue: null as string | null };
+    const loaded = parseCompatibleBackup(saved);
+    if (
+      loaded.record.xp === 14000 &&
+      loaded.record.advancements.length === 0 &&
+      !loaded.log.some((entry) => entry.startsWith("XP"))
+    ) {
+      loaded.record.xp = PERCIVAL.xp;
+    }
     return {
-      state: saved ? parseCompatibleBackup(saved) : createAppState(),
+      state: loaded,
       issue: null as string | null,
     };
   } catch {

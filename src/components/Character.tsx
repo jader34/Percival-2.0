@@ -1,11 +1,20 @@
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Feather, Shield } from "lucide-react";
+import { ArrowUpRight, Check, Feather, Plus, Shield } from "lucide-react";
 import type { Ability } from "../percival/types.ts";
 import type { PanelProps } from "./shared.ts";
 import { abilityNames, signed } from "./shared.ts";
 export function Character({ state, sheet, act, open }: PanelProps) {
   const [notes, setNotes] = useState(state.session.notes);
   useEffect(() => setNotes(state.session.notes), [state.session.notes]);
+  const nextXp = sheet.xp.nextLevelThreshold;
+  const floorXp = sheet.xp.currentLevelThreshold;
+  const xpRatio = nextXp
+    ? Math.max(
+        0,
+        Math.min(1, (sheet.xp.current - floorXp) / Math.max(1, nextXp - floorXp)),
+      )
+    : 1;
+  const xpRemaining = nextXp ? Math.max(0, nextXp - sheet.xp.current) : 0;
   return (
     <section className="page-panel character-panel">
       <div className="page-heading">
@@ -15,6 +24,59 @@ export function Character({ state, sheet, act, open }: PanelProps) {
         </div>
         <Feather size={34} strokeWidth={1} />
       </div>
+      <section className="xp-panel" aria-label="Experiência de Percival">
+        <div className="section-heading">
+          <h2>Experiência</h2>
+          <span>
+            {nextXp
+              ? `Nível ${sheet.level} → ${sheet.level + 1}`
+              : "Nível máximo"}
+          </span>
+        </div>
+        <div className="xp-main">
+          <div className="xp-numbers">
+            <strong data-testid="current-xp">
+              {sheet.xp.current.toLocaleString("pt-BR")}
+            </strong>
+            <span>
+              {nextXp
+                ? `/ ${nextXp.toLocaleString("pt-BR")} XP`
+                : "XP acumulados"}
+            </span>
+          </div>
+          <button
+            className="button compact primary"
+            onClick={() => open({ kind: "xp" })}
+          >
+            <Plus size={15} />
+            Somar XP
+          </button>
+        </div>
+        <div className="xp-track" aria-hidden="true">
+          <div
+            className={`xp-fill ${nextXp && xpRemaining === 0 ? "is-ready" : ""}`}
+            style={{ transform: `scaleX(${xpRatio})` }}
+          />
+        </div>
+        <div className="xp-footer">
+          <p>
+            {!nextXp
+              ? "Percival alcançou o nível 20."
+              : xpRemaining > 0
+                ? `Faltam ${xpRemaining.toLocaleString("pt-BR")} XP para o nível ${sheet.level + 1}.`
+                : `XP suficiente para o nível ${sheet.level + 1} · confirme com o mestre e role o d10 físico.`}
+          </p>
+          {nextXp && xpRemaining === 0 && (
+            <button
+              className="text-button"
+              onClick={() => open({ kind: "level" })}
+            >
+              Evoluir
+              <ArrowUpRight size={15} />
+            </button>
+          )}
+        </div>
+      </section>
       <div className="ability-grid">
         {(Object.keys(abilityNames) as Ability[]).map((ability) => (
           <div className="ability" key={ability}>

@@ -165,7 +165,7 @@ test('evolução usa d10 físico e escolha do motor sem curar ou restaurar gasto
   assert.equal(api.getSheet(state).hpMax, 87);
   assert.deepEqual(state.session, session);
   assert.equal(api.getSheet(api.undo(state)).level, 7);
-  assert.equal(state.record.xp, 14000);
+  assert.equal(state.record.xp, 18967);
 });
 
 test('inventário, notas e sintonização são reversíveis e não recarregam itens', () => {
@@ -396,4 +396,20 @@ test('montaria controla PV temporários, barda de Cota de talas e reconvocação
   assert.equal(api.getSheet(state).mount.armorClass, 11);
   state = act(state, 'mount-summon');
   assert.equal(state.session.mount.hp, 19);
+});
+
+test('soma XP ganho automaticamente a partir de 18.967 sem subir de nível sozinho e permite desfazer', () => {
+  let state = initial();
+  assert.equal(state.record.xp, 18967);
+  assert.throws(() => act(state, 'xp', { mode: 'add', amount: 0 }), /inteiro/);
+  assert.throws(() => act(state, 'xp', { mode: 'add', amount: -50 }), /inteiro/);
+  assert.throws(() => act(state, 'xp', { mode: 'set', amount: -1 }), /inteiro/);
+  state = act(state, 'xp', { mode: 'add', amount: 1250 });
+  assert.equal(state.record.xp, 20217);
+  state = act(state, 'xp', { mode: 'add', amount: 3000 });
+  assert.equal(state.record.xp, 23217);
+  assert.equal(api.getSheet(state).level, 6, 'Alcançar 23.000 XP não inventa o d10 físico do nível 7.');
+  assert.equal(api.undo(state).record.xp, 20217);
+  state = act(state, 'xp', { mode: 'set', amount: 18967 });
+  assert.equal(state.record.xp, 18967);
 });

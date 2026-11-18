@@ -222,7 +222,7 @@ test('expõe dados não confirmados e recusa talentos sem automação em vez de 
   assert.ok(warnings.includes('amulet-attunement'));
   assert.ok(warnings.includes('extra-spell-warding-bond'));
   assert.equal(sheet.calculationStatus, 'needs-confirmation');
-  assert.equal(sheet.xp.current, 14000);
+  assert.equal(sheet.xp.current, 18967);
   assert.equal(sheet.xp.nextLevelThreshold, 23000);
   assert.equal(sheet.nextLevel.level, 7);
   assert.equal(sheet.nextLevel.requiresPhysicalD10, true);

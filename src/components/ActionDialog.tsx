@@ -30,6 +30,7 @@ const titles: Record<Dialog["kind"], string> = {
   blessing: "Bênção de Sangue",
   absorb: "Absorver Vitalidade",
   rest: "Pausa na jornada",
+  xp: "Experiência (XP)",
   settings: "Sua ficha, seu aparelho",
   level: "Um novo capítulo",
   potion: "Poção de Cura Maior",
@@ -70,6 +71,7 @@ export function ActionDialog({
   const [specialTarget, setSpecialTarget] = useState(false);
   const [critical, setCritical] = useState(false);
   const [rest, setRest] = useState<"short" | "long" | "dawn">("short");
+  const [xpMode, setXpMode] = useState<"add" | "set">("add");
   const [acknowledged, setAcknowledged] = useState(false);
   const [ability, setAbility] = useState<Ability | "">("");
   const [secondAbility, setSecondAbility] = useState<Ability | "">("");
@@ -683,6 +685,136 @@ export function ActionDialog({
                 ? "descanso longo"
                 : "amanhecer"}
           </button>
+        </>
+      )}
+      {dialog.kind === "xp" && (
+        <>
+          <p className="dialog-description">
+            XP atual:{" "}
+            <strong>{sheet.xp.current.toLocaleString("pt-BR")} XP</strong>
+            {sheet.xp.nextLevelThreshold
+              ? ` (próximo nível em ${sheet.xp.nextLevelThreshold.toLocaleString("pt-BR")} XP).`
+              : "."}{" "}
+            Informe o XP ganho na sessão para somá-lo automaticamente.
+          </p>
+          <div className="segmented xp-mode-tabs">
+            <button
+              aria-pressed={xpMode === "add"}
+              onClick={() => {
+                setXpMode("add");
+                setAmount("");
+              }}
+            >
+              Somar XP ganho
+            </button>
+            <button
+              aria-pressed={xpMode === "set"}
+              onClick={() => {
+                setXpMode("set");
+                setAmount(String(sheet.xp.current));
+              }}
+            >
+              Definir total
+            </button>
+          </div>
+          <label className="field-label" htmlFor="xp-amount">
+            {xpMode === "add" ? "XP ganho na aventura" : "Novo total de XP"}
+          </label>
+          <input
+            className="amount-input"
+            id="xp-amount"
+            type="number"
+            inputMode="numeric"
+            min={xpMode === "add" ? 1 : 0}
+            max={10000000}
+            step="1"
+            value={amount}
+            placeholder="0"
+            onChange={(e) => setAmount(e.target.value)}
+            autoFocus
+          />
+          {xpMode === "add" && (
+            <div className="quick-amounts">
+              {[100, 250, 500, 1000].map((value) => (
+                <button
+                  key={value}
+                  className="button secondary"
+                  onClick={() =>
+                    setAmount(
+                      String(
+                        (amount.trim() !== "" &&
+                        Number.isSafeInteger(numeric) &&
+                        numeric > 0
+                          ? numeric
+                          : 0) + value,
+                      ),
+                    )
+                  }
+                >
+                  +{value}
+                </button>
+              ))}
+            </div>
+          )}
+          {((xpMode === "add" && validNumber && numeric <= 10_000_000) ||
+            (xpMode === "set" &&
+              amount.trim() !== "" &&
+              Number.isSafeInteger(numeric) &&
+              numeric >= 0 &&
+              numeric <= 10_000_000)) && (
+            <>
+              <div className="result-preview">
+                <span>
+                  {xpMode === "add"
+                    ? `${sheet.xp.current.toLocaleString("pt-BR")} + ${numeric.toLocaleString("pt-BR")}`
+                    : "Total após ajuste"}
+                </span>
+                <strong>
+                  {(xpMode === "add"
+                    ? sheet.xp.current + numeric
+                    : numeric
+                  ).toLocaleString("pt-BR")}{" "}
+                  <small>XP</small>
+                </strong>
+              </div>
+              {sheet.xp.nextLevelThreshold &&
+                (xpMode === "add" ? sheet.xp.current + numeric : numeric) >=
+                  sheet.xp.nextLevelThreshold && (
+                  <p className="notice">
+                    Meta de{" "}
+                    {sheet.xp.nextLevelThreshold.toLocaleString("pt-BR")} XP do
+                    nível {sheet.level + 1} alcançada. Subir de nível continua
+                    exigindo autorização do mestre e o d10 físico em Ficha.
+                  </p>
+                )}
+            </>
+          )}
+          <button
+            className="button primary full"
+            disabled={
+              xpMode === "add"
+                ? !validNumber || numeric > 10_000_000
+                : amount.trim() === "" ||
+                  !Number.isSafeInteger(numeric) ||
+                  numeric < 0 ||
+                  numeric > 10_000_000
+            }
+            onClick={() =>
+              submit(
+                { type: "xp", mode: xpMode, amount: numeric },
+                xpMode === "add"
+                  ? `+${numeric.toLocaleString("pt-BR")} XP somados (total ${(sheet.xp.current + numeric).toLocaleString("pt-BR")} XP).`
+                  : `XP ajustado para ${numeric.toLocaleString("pt-BR")}.`,
+              )
+            }
+          >
+            {xpMode === "add"
+              ? validNumber && numeric <= 10_000_000
+                ? `Somar +${numeric.toLocaleString("pt-BR")} XP`
+                : "Somar XP"
+              : "Confirmar total de XP"}
+          </button>
+          <p className="caption">Você pode desfazer este registro.</p>
         </>
       )}
       {dialog.kind === "level" && (

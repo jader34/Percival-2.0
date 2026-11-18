@@ -60,6 +60,7 @@ export type Action =
   | { type: 'smite'; slotLevel: number }
   | { type: 'end-concentration' }
   | { type: 'rest'; kind: 'short' | 'long' | 'dawn' }
+  | { type: 'xp'; mode: 'add' | 'set'; amount: number }
   | { type: 'notes'; value: string }
   | { type: 'item-quantity'; id: string; quantity: number }
   | { type: 'equipment'; id: string; equipped: boolean }
@@ -216,6 +217,17 @@ export function applyAction(state: AppState, action: Action): AppState {
     case 'level-up':
       next.record = levelUp(next.record, { hitDieResult: action.hitDieResult, ...(action.improvement === undefined ? {} : { improvement: action.improvement }) });
       break;
+    case 'xp':
+      if (action.mode === 'add') {
+        rangedInteger(action.amount, 1, 10_000_000, 'XP ganho');
+        integer(next.record.xp + action.amount, 'XP total');
+        next.record.xp += action.amount;
+      } else if (action.mode === 'set') {
+        integer(action.amount, 'XP total', 10_000_000);
+        next.record.xp = action.amount;
+      } else throw new Error('Modo de XP inválido.');
+      calculatePercival(next.record);
+      break;
     case 'notes':
       if (typeof action.value !== 'string') throw new Error('Notas precisam ser texto.');
       session.notes = action.value;
@@ -349,7 +361,7 @@ export function applyAction(state: AppState, action: Action): AppState {
     'lay-on-hands': 'Impor as Mãos', 'use-resource': 'Recurso utilizado',
     blessing: 'Bênção de Sangue ativada', veil: 'Véu de Sangue ativado', 'end-effect': 'Efeito encerrado',
     cast: 'Magia conjurada', smite: 'Destruição Divina', 'end-concentration': 'Concentração encerrada',
-    rest: 'Descanso registrado', notes: 'Notas atualizadas', 'item-quantity': 'Quantidade atualizada',
+    rest: 'Descanso registrado', xp: 'XP atualizado', notes: 'Notas atualizadas', 'item-quantity': 'Quantidade atualizada',
     equipment: 'Equipamento atualizado', attunement: 'Sintonização atualizada', prepare: 'Preparação atualizada',
     'level-up': 'Nível elevado', 'human-skill': 'Perícia humana registrada', 'grant-spell': 'Concessão atualizada',
     potion: 'Poção de cura consumida',

@@ -1422,6 +1422,66 @@ button.resource-row:hover:not(:disabled) {
   gap: 12px;
   margin: 26px 0;
 }
+.xp-panel {
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 18px 16px;
+  margin: 20px 0 26px;
+}
+.xp-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.xp-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.xp-numbers strong {
+  font-size: 32px;
+  line-height: 1.1;
+}
+.xp-numbers span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.xp-track {
+  height: 8px;
+  background: var(--ground);
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 14px 0 12px;
+}
+.xp-fill {
+  width: 100%;
+  height: 100%;
+  background: var(--red);
+  transform-origin: left center;
+  transition: transform 0.25s ease-out;
+}
+.xp-fill.is-ready {
+  background: var(--gold);
+}
+.xp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.xp-footer p {
+  font-size: 13px;
+  color: var(--muted);
+}
+.xp-mode-tabs {
+  margin-top: 0;
+}
 .ability {
   border: 1px solid var(--line-strong);
   border-radius: 4px;
