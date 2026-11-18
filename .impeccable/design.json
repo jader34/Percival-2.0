@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-18T01:21:12.928826+00:00",
+  "title": "Design System: Percival — Relicário de sangue",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Hematita"
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Metal sombreado"
+      },
+      "surface-hover": {
+        "role": "neutral",
+        "displayName": "Metal realçado"
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Marfim"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Cinza rosado"
+      },
+      "gold": {
+        "role": "secondary",
+        "displayName": "Ouro envelhecido"
+      },
+      "rose": {
+        "role": "primary",
+        "displayName": "Rosa claro"
+      },
+      "red": {
+        "role": "primary",
+        "displayName": "Rubro"
+      },
+      "red-light": {
+        "role": "primary",
+        "displayName": "Sangue iluminado"
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Gravura"
+      },
+      "line-strong": {
+        "role": "neutral",
+        "displayName": "Gravura reforçada"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Identidade",
+        "purpose": "Nome de Percival; tamanhos responsivos em Layout e Typography."
+      },
+      "headline": {
+        "displayName": "Títulos",
+        "purpose": "Cinzel nos títulos h2, com variantes de seção e página."
+      },
+      "title": {
+        "displayName": "Título operacional",
+        "purpose": "h3 em Barlow; arma é exceção em Cinzel."
+      },
+      "body": {
+        "displayName": "Corpo",
+        "purpose": "Leitura e base herdada por controles."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Label de campo."
+      },
+      "button": {
+        "displayName": "Controle",
+        "purpose": "Botão padrão de operação."
+      },
+      "vitality-number": {
+        "displayName": "Pontos de vida",
+        "purpose": "Número tabular predominante; não depende do ornamento."
+      }
+    },
+    "shadows": [
+      {
+        "name": "navigation-mobile",
+        "value": "0 -8px 28px #08050955",
+        "purpose": "Separação da barra inferior; none no desktop."
+      },
+      {
+        "name": "dialog",
+        "value": "0 -12px 70px #08050999",
+        "purpose": "Folha modal acima do conteúdo."
+      },
+      {
+        "name": "toast",
+        "value": "0 8px 28px #0007",
+        "purpose": "Mensagem flutuante."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-colors",
+        "value": "background-color 0.18s, border-color 0.18s, color 0.18s",
+        "purpose": "Transições dos botões, easing CSS padrão."
+      },
+      {
+        "name": "blood-liquid",
+        "value": "transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Acompanha a mudança de PV, sem animação ambiente."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }",
+        "purpose": "Remove movimento quando solicitado pelo usuário."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "min-width-600",
+        "value": "600px"
+      },
+      {
+        "name": "min-width-1000",
+        "value": "1000px"
+      },
+      {
+        "name": "max-width-359",
+        "value": "359px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Padrão",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-button\">Confirmar</button>",
+      "css": ".ds-button {color:var(--text);}\n.ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-button ds-primary\">Registrar</button>",
+      "css": ".ds-button {color:var(--text);}\n.ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-button.ds-primary {background: var(--red); border-color: var(--red-light); color: #fff2eb;}\n.ds-button.ds-primary:hover:not(:disabled) {background: #a72c42;}\n.ds-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-button ds-secondary\">Exportar dados</button>",
+      "css": ".ds-button {color:var(--text);}\n.ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-button.ds-secondary {background: transparent;}\n.ds-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Registrar dano",
+      "kind": "button",
+      "refersTo": "button-damage",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-button ds-damage-button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path></svg>Registrar dano</button>",
+      "css": ".ds-button {color:var(--text);}\n.ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-damage-button {background: #9f293e; border-color: #c04b60; color: #fff2ed;}\n.ds-damage-button:hover:not(:disabled) {background: #b3364d;}\n.ds-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Curar",
+      "kind": "button",
+      "refersTo": "button-heal",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-button ds-heal-button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>Curar</button>",
+      "css": ".ds-button {color:var(--text);}\n.ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-heal-button {background: #e7d8c6; border-color: #e7d8c6; color: #32191d;}\n.ds-heal-button:hover:not(:disabled) {background: #fff0da;}\n.ds-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Texto",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-text-button\">Descansar</button>",
+      "css": ".ds-text-button {color:var(--text);}\n.ds-text-button {display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 0; background: transparent; color: var(--muted); font-weight: 500; min-height: 44px; padding: 4px 0; font-size: 13px;}\n.ds-text-button:hover {color: var(--text);}\n.ds-text-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-text-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-text-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-text-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-text-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-text-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Ícone",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Variante existente; foco, pressionado, desabilitado e hover preservados. Exemplo visual sem operação de sessão.",
+      "html": "<button type=\"button\" class=\"ds-icon-button\" aria-label=\"Fechar janela\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg></button>",
+      "css": ".ds-icon-button {color:var(--text);}\n.ds-icon-button {display: inline-flex; align-items: center; justify-content: center; background: transparent; border: 1px solid transparent; border-radius: 5px; min-width: 44px; min-height: 44px;}\n.ds-icon-button:hover {background: var(--surface);}\n.ds-icon-button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-icon-button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-icon-button:active:not(:disabled) {filter:brightness(.9);}\n.ds-icon-button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-icon-button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-icon-button {transition:none!important;animation:none!important;}}"
+    },
+    {
+      "name": "Busca de magia",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Campo de busca real: borda externa e foco no input, sem inventar estados de hover ou erro.",
+      "html": "<label class=\"ds-search-field\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21 21-4.34-4.34\"></path><circle cx=\"11\" cy=\"11\" r=\"8\"></circle></svg><input aria-label=\"Buscar magia\" placeholder=\"Encontrar uma magia…\"></label>",
+      "css": ".ds-search-field {display: flex; align-items: center; gap: 10px; border: 1px solid var(--line-strong); border-radius: 5px; padding: 0 12px; color: var(--muted);}\n.ds-search-field input {width: 100%; min-width: 0; border: 0; background: transparent; min-height: 48px; outline-offset: 0;}\n.ds-search-field{font-family:var(--body);line-height:1.5}.ds-search-field input{font-family:var(--body);font-size:16px;line-height:1.5;color:var(--text);border-radius:5px;caret-color:var(--red-light)}.ds-search-field input::placeholder{color:var(--muted)}.ds-search-field input:focus-visible{outline:2px solid var(--gold);outline-offset:0}.ds-search-field svg{flex-shrink:0}"
+    },
+    {
+      "name": "Navegação responsiva",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Quatro destinos e seleção real. Apenas a ancoragem fixa/margens de página são removidas no catálogo para manter o exemplo dentro do preview; a aplicação conserva as regras de Layout. Exemplo sem troca de aba.",
+      "html": "<nav class=\"ds-main-nav\" aria-label=\"Navegação principal\"><button type=\"button\" aria-current=\"page\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m13 19 6-6\"></path><path d=\"M14.5 17.5 3.586 6.586A2 2 0 013 5.172V3h2.172a2 2 0 011.414.586L17.5 14.5\"></path><path d=\"m14.828 6.172 2.586-2.586A2 2 0 0118.828 3H21v2.172a2 2 0 01-.586 1.414l-2.586 2.586\"></path><path d=\"m16 16 4 4\"></path><path d=\"m19 21 2-2\"></path><path d=\"m5 14 4 4\"></path><path d=\"m5 21-2-2\"></path><path d=\"M7.5 16.5 4 20\"></path></svg><span>Combate</span></button><button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 5v16\"></path><path d=\"M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z\"></path></svg><span>Magias</span></button><button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z\"></path><path d=\"M8 10h8\"></path><path d=\"M8 18h8\"></path><path d=\"M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6\"></path><path d=\"M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2\"></path></svg><span>Inventário</span></button><button type=\"button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"21\" height=\"21\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M14.086 18.412A2 2 0 0112.67 19H5v-7.672a2 2 0 01.586-1.414L11.75 3.75a6 6 0 118.49 8.49z\"></path><path d=\"M16 8 2 22\"></path><path d=\"M17.488 15H9\"></path></svg><span>Ficha</span></button></nav>",
+      "css": ".ds-main-nav {display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; bottom: 0; left: 0; right: 0; z-index: 20; background: #1b1217; border-top: 1px solid #50303a; padding: 0 10px env(safe-area-inset-bottom); box-shadow: 0 -8px 28px #08050955;}\n.ds-main-nav button {display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; min-height: 72px; padding: 10px 3px; border: 0; border-top: 2px solid transparent; background: transparent; color: var(--muted); font-size: 11px;}\n.ds-main-nav button[aria-current] {color: var(--rose); border-top-color: var(--red-light); background: linear-gradient(#a32e4120, transparent);}\n.ds-main-nav button:hover {color: var(--text);}\n.ds-main-nav button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-main-nav button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-main-nav button:active:not(:disabled) {filter:brightness(.9);}\n.ds-main-nav button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-main-nav button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-main-nav button {transition:none!important;animation:none!important;}}\n.ds-main-nav{position:relative;left:auto;right:auto;bottom:auto;z-index:auto}\n@media(min-width:1000px){.ds-main-nav{display:flex;flex-direction:column;width:180px;gap:5px;background:transparent;border:0;box-shadow:none;padding:0}.ds-main-nav button{flex-direction:row;justify-content:flex-start;min-height:52px;gap:15px;padding:12px 20px;border:1px solid transparent;border-radius:5px;font-size:14px}.ds-main-nav button[aria-current]{border-color:#63303a;background:#31171e}}"
+    },
+    {
+      "name": "Efeito ativo",
+      "kind": "chip",
+      "refersTo": "effect-chip",
+      "description": "Botão de encerramento com texto e X; demonstra o estilo de um efeito já ativo, sem alterar a sessão.",
+      "html": "<div class=\"ds-active-effects\"><button type=\"button\">Bênção de Sangue<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg></button><small>Toque para encerrar. Durações são controladas na mesa.</small></div>",
+      "css": ".ds-active-effects {display: flex; flex-wrap: wrap; gap: 7px; margin: -4px 0 22px;}\n.ds-active-effects button {display: flex; align-items: center; gap: 7px; min-height: 44px; padding: 8px 10px; border: 1px solid #6d3440; background: #30161d; color: var(--rose); border-radius: 4px; font-size: 12px;}\n.ds-active-effects small {width: 100%; color: var(--muted); font-size: 11px;}\n.ds-active-effects button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-active-effects button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-active-effects button:active:not(:disabled) {filter:brightness(.9);}\n.ds-active-effects button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-active-effects button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-active-effects button {transition:none!important;animation:none!important;}}\n.ds-active-effects small{font-family:var(--body);line-height:1.5}"
+    },
+    {
+      "name": "Atributo",
+      "kind": "card",
+      "refersTo": "ability-card",
+      "description": "Cartão de atributo da Ficha: rótulo, valor tabular e modificador. Dados ilustrativos correspondentes à Força inicial.",
+      "html": "<div class=\"ds-ability\"><span>Força</span><strong>+3</strong><small>16</small></div>",
+      "css": ".ds-ability {border: 1px solid var(--line-strong); border-radius: 4px; text-align: center; padding: 15px 8px; background: var(--surface);}\n.ds-ability > span {color: var(--muted); font-size: 12px;}\n.ds-ability strong {display: block; font-size: 30px; font-variant-numeric: tabular-nums; line-height: 1.3;}\n.ds-ability small {display: inline-block; font-size: 12px; color: var(--gold); border-top: 1px solid var(--line-strong); padding: 4px 10px 0; margin-top: 5px;}\n.ds-ability{font-family:var(--body);line-height:1.5;color:var(--text)}.ds-ability strong{font-weight:600}"
+    },
+    {
+      "name": "Vitalidade e relicário",
+      "kind": "custom",
+      "refersTo": "vitality",
+      "description": "Composição mobile e SVG autoral extraídos do código. Amostra estática com 64/64 PV (ratio=1); não simula registro nem rolagem. Media queries da página estão documentadas em Layout.",
+      "html": "<section class=\"ds-vitality\" aria-label=\"Vitalidade de Percival\"><div class=\"ds-vitality-copy\"><div class=\"ds-vitality-heading\"><h2>Vitalidade</h2><span class=\"ds-status-mark\">De pé, pelo juramento</span></div><div class=\"ds-hp-number\"><strong>64</strong><span>/ 64<small>pontos de vida</small></span></div><button class=\"ds-temp-button\" type=\"button\">Adicionar PV temporários<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg></button></div><svg\n      class=\"ds-blood-vessel\"\n      viewBox=\"0 0 200 230\"\n      aria-hidden=\"true\"\n    >\n      <defs>\n        <linearGradient id=\"ds-preview-blood\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\">\n          <stop stop-color=\"#d2525c\" />\n          <stop offset=\".45\" stop-color=\"#9c2138\" />\n          <stop offset=\"1\" stop-color=\"#390f22\" />\n        </linearGradient>\n        <linearGradient id=\"ds-preview-metal\">\n          <stop stop-color=\"#604c4a\" />\n          <stop offset=\".5\" stop-color=\"#dac3a2\" />\n          <stop offset=\"1\" stop-color=\"#64423f\" />\n        </linearGradient>\n        <clipPath id=\"ds-preview-shape\">\n          <path d=\"M100 27C89 59 46 95 46 139a54 54 0 0 0 108 0C154 95 111 59 100 27Z\" />\n        </clipPath>\n      </defs>\n      <path\n        d=\"M100 8 177 65v102l-77 54-77-54V65Z\"\n        stroke=\"#a78a72\"\n        stroke-opacity=\".18\"\n        fill=\"none\"\n      />\n      <path\n        d=\"M100 18 166 69v93l-66 47-66-47V69Z\"\n        stroke=\"#a78a72\"\n        stroke-opacity=\".25\"\n        fill=\"none\"\n      />\n      <path\n        d=\"M100 27C89 59 46 95 46 139a54 54 0 0 0 108 0C154 95 111 59 100 27Z\"\n        fill=\"#1b1018\"\n        stroke=\"url(#ds-preview-metal)\"\n        stroke-width=\"1.5\"\n      />\n      <g clip-path=\"url(#ds-preview-shape)\">\n        <g class=\"ds-blood-liquid\" style=\"transform:translateY(45px)\">\n          <path\n            d=\"M30 4Q65 -6 100 4T170 4V220H30Z\"\n            fill=\"url(#ds-preview-blood)\"\n          />\n          <path\n            d=\"M30 4Q65 -6 100 4T170 4\"\n            fill=\"none\"\n            stroke=\"#e99b94\"\n            stroke-opacity=\".65\"\n          />\n          <path\n            d=\"M65 24c-19 58 3 97 32 115\"\n            fill=\"none\"\n            stroke=\"#ec7b7f\"\n            stroke-opacity=\".2\"\n            stroke-width=\"13\"\n          />\n        </g>\n      </g>\n      <path\n        d=\"M100 50v139m-6-3 6 11 6-11M100 50l-8 20 8-6 8 6-8-20Zm-21 47h42M100 69c25 0 31 17 31 28-9-8-20-10-31-9M97 69c-12 3-19 9-20 20\"\n        stroke=\"url(#ds-preview-metal)\"\n        stroke-width=\"2\"\n        fill=\"none\"\n      />\n      <path\n        d=\"m99 7-3-3 4-4 4 4-3 3M17 112h11m144 0h11M94 220h12\"\n        stroke=\"#be9b7e\"\n        stroke-width=\"1\"\n      />\n</svg><div class=\"ds-hp-actions\"><button type=\"button\" class=\"ds-button ds-damage-button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path></svg>Registrar dano</button><button type=\"button\" class=\"ds-button ds-heal-button\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>Curar</button></div></section>",
+      "css": ".ds-button {display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 18px; min-height: 46px; font-weight: 600; border: 1px solid var(--line-strong); border-radius: 5px; background: var(--surface); font-size: 15px;}\n.ds-button:hover:not(:disabled) {background: var(--surface-hover);}\n.ds-vitality {position: relative; isolation: isolate; min-height: 232px; background: linear-gradient(120deg, #511724, #32141d 65%, #251319); border: 1px solid #853044; border-radius: 8px; padding: 20px; display: grid; grid-template-columns: minmax(0, 1fr) 92px; column-gap: 4px; overflow: hidden;}\n.ds-vitality::before {content: \"\"; position: absolute; pointer-events: none; inset: 6px; border: 1px solid #b9526230; border-radius: 3px; z-index: -1;}\n.ds-vitality::after {content: \"\"; position: absolute; pointer-events: none; right: 21px; top: 0; bottom: 0; width: 1px; background: #b9526230; z-index: -1;}\n.ds-vitality-heading h2 {font-size: 15px; color: var(--rose);}\n.ds-status-mark {display: block; font-size: 10px; color: #e3adb3; margin-top: 4px;}\n.ds-hp-number {display: flex; align-items: center; gap: 12px; font-variant-numeric: tabular-nums; margin: 3px 0 1px;}\n.ds-hp-number > strong {font-size: 76px; line-height: 1.12; letter-spacing: -0.05em; font-weight: 500; color: #fff2e7;}\n.ds-hp-number > span {font-size: 23px; color: #e7b7bd;}\n.ds-hp-number small {display: block; font-size: 11px; color: #e7b7bd;}\n.ds-temp-button {padding: 5px 0; display: flex; gap: 6px; align-items: center; background: transparent; border: 0; min-height: 36px; font-size: 11px; color: #eac5ca;}\n.ds-blood-vessel {width: 92px; height: 156px; align-self: center; overflow: visible;}\n.ds-blood-liquid {transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);}\n.ds-hp-actions {display: grid; grid-template-columns: 1.6fr 1fr; gap: 10px; grid-column: 1/-1; margin-top: 14px;}\n.ds-damage-button {background: #9f293e; border-color: #c04b60; color: #fff2ed;}\n.ds-heal-button {background: #e7d8c6; border-color: #e7d8c6; color: #32191d;}\n.ds-heal-button:hover:not(:disabled) {background: #fff0da;}\n.ds-damage-button:hover:not(:disabled) {background: #b3364d;}\n.ds-vitality{font-family:var(--body);font-size:16px;line-height:1.5;color:var(--text)}.ds-vitality h2{margin:0;font-family:var(--display);font-weight:600;line-height:1.4}.ds-hp-number strong{font-weight:500}.ds-vitality button{font-family:var(--body);line-height:1.5}.ds-temp-button{cursor:pointer}\n.ds-vitality button {font-family:var(--body);line-height:1.5;cursor:pointer;transition:background-color .18s,border-color .18s,color .18s;overflow-wrap:anywhere;-webkit-tap-highlight-color:transparent;}\n.ds-vitality button:focus-visible {outline:2px solid var(--gold);outline-offset:4px;}\n.ds-vitality button:active:not(:disabled) {filter:brightness(.9);}\n.ds-vitality button:disabled {cursor:not-allowed;opacity:.42;}\n.ds-vitality button svg {flex-shrink:0;}\n@media(prefers-reduced-motion:reduce) {.ds-vitality button {transition:none!important;animation:none!important;}}\n@media(prefers-reduced-motion:reduce){.ds-blood-liquid{transition:none!important}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Relicário de sangue",
+    "overview": "Hematita escura, sangue rubro, texto marfim e metal dourado dão identidade a uma ferramenta de mesa, não a uma apresentação promocional. Linhas finas gravadas, cantos discretos e títulos lapidares cercam controles diretos. A personalidade está no material e no detalhe; números e ações continuam sendo o primeiro plano.\n\nO relicário é uma gota vetorial com líquido que acompanha os pontos de vida. Ele complementa, sem substituir, o valor numérico e a descrição do estado. O sistema mantém densidade de consulta e operação por toque: texto secundário recua, ações relevantes contrastam e descrições extensas ficam em expansões ou diálogos.",
+    "keyCharacteristics": [
+      "Fundo hematítico, marfim legível, rubro operacional e ouro pontual.",
+      "Cinzel para identidade e títulos; Barlow para leitura, controles e números tabulares.",
+      "Linhas e camadas tonais em vez de uma grade de cartões elevados.",
+      "Símbolos vetoriais e movimento vinculado a mudanças de estado.",
+      "Operação mobile-first, com navegação inferior e composição lateral no desktop."
+    ],
+    "rules": [
+      {
+        "name": "The Estado explícito Rule",
+        "body": "Cor acompanha texto, número ou estado semântico; sangue, seleção e erro não dependem apenas da cor.",
+        "section": "colors"
+      },
+      {
+        "name": "The Número antes do ornamento Rule",
+        "body": "Use Cinzel para identidade e títulos, mantendo Barlow e algarismos tabulares na operação e na leitura de estado.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plano por padrão Rule",
+        "body": "Organize leitura com linhas e camadas tonais; reserve sombra para superfícies que realmente se sobrepõem ao conteúdo.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** preservar os nomes e valores de `src/tokens.css`; manter tintas locais restritas aos componentes que já as usam.",
+      "**Do** manter Barlow e números tabulares na operação, com Cinzel reservado à identidade e aos títulos.",
+      "**Do** conservar texto, número e verbo explícito junto a estados, símbolos e cores.",
+      "**Do** preservar foco visível, semântica nativa, movimento reduzido e comportamento responsivo existente.",
+      "**Do** manter `right: auto` na navegação desktop e a barra inferior de quatro destinos no celular.",
+      "**Do** usar SVG para o relicário e o selo, distinguindo esses desenhos autorais dos ícones Lucide."
+    ],
+    "donts": [
+      "**Don't** inventar retrato de Percival, dados virtuais ou uma identidade genérica de gerenciador de personagens.",
+      "**Don't** adicionar vidro com blur, ruído animado, cartões promocionais ou movimento ambiente.",
+      "**Don't** substituir cura marfim por verde nem usar o rubro sozinho como indicação de estado.",
+      "**Don't** promover cores locais, medidas observadas ou rampas sintetizadas a novos tokens do código sem implementação explícita.",
+      "**Don't** afirmar sincronização, suporte offline, aprovação integral de acessibilidade ou testes em aparelhos físicos a partir deste registro visual."
+    ]
+  }
+}

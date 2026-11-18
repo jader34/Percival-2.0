@@ -1,0 +1,15 @@
+:root {
+  --ground: #160e12;
+  --surface: #21171c;
+  --surface-hover: #35242c;
+  --text: #efe3d8;
+  --muted: #b7a2aa;
+  --gold: #c9ab87;
+  --rose: #f0b1bb;
+  --red: #94283d;
+  --red-light: #ca6378;
+  --line: #38242e;
+  --line-strong: #65424f;
+  --body: "Barlow", sans-serif;
+  --display: "Cinzel", Georgia, serif;
+}

@@ -1,0 +1,281 @@
+[
+  {
+    "test": "Vida inicial",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Dano absorve temporários",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Desfazer restaura PV e temporários",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Aba magias abre",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Efeitos persistem entre abas",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Efeitos persistem ao recarregar",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Smite mostra dados físicos",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Crítico dobra dados",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Smite consome espaço",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Busca ignora acentos",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Conjuração registra concentração e espaço",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário abre",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Quantidade do inventário salva",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Notas salvas",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Evolução física nível 7",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Evolução recalcula máximo sem curar",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Combate sem overflow 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Magias sem overflow 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário sem overflow 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Ficha sem overflow 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Fechar janela visível 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Janela sem recorte lateral 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Escape fecha e retorna foco 320",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Combate sem overflow 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Magias sem overflow 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário sem overflow 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Ficha sem overflow 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Fechar janela visível 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Janela sem recorte lateral 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Escape fecha e retorna foco 360",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Combate sem overflow 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Magias sem overflow 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário sem overflow 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Ficha sem overflow 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Fechar janela visível 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Janela sem recorte lateral 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Escape fecha e retorna foco 390",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Combate sem overflow 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Magias sem overflow 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário sem overflow 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Ficha sem overflow 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Fechar janela visível 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Janela sem recorte lateral 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Escape fecha e retorna foco 768",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Combate sem overflow 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Magias sem overflow 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Inventário sem overflow 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Ficha sem overflow 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Fechar janela visível 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Janela sem recorte lateral 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Escape fecha e retorna foco 1440",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Sem erros JS nos fluxos",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Erro de recurso visível no modal",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Exportação JSON baixada e lida",
+    "passed": true
+  },
+  {
+    "test": "Importação pelo controle de arquivo",
+    "passed": true,
+    "result": true
+  },
+  {
+    "test": "Arquivo corrompido não é sobrescrito",
+    "passed": true,
+    "result": true
+  }
+]
