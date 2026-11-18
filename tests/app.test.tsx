@@ -7,6 +7,12 @@ import { Modal } from "../src/components/Modal.tsx";
 import { Combat } from "../src/components/Combat.tsx";
 import { Character } from "../src/components/Character.tsx";
 import { ActionDialog } from "../src/components/ActionDialog.tsx";
+import { SPELL_DETAILS } from "../src/components/spellDetails.ts";
+import {
+  LEGACY_EXTRA_SPELLS,
+  OATH_SPELLS,
+  PALADIN_SPELLS,
+} from "../src/percival/tables.ts";
 import { applyAction, createAppState, getSheet } from "../src/session/state.ts";
 
 test("a primeira tela mostra Percival, vida e navegação mobile sem dados virtuais", async () => {
@@ -141,4 +147,20 @@ test("exibe ficha da montaria com Cota de talas, Dados de Vida e salvaguardas co
   assert.match(characterHtml, /Experiência/);
   assert.match(characterHtml, /18\.967/);
   assert.match(characterHtml, /Somar XP/);
+});
+
+test("todas as magias catalogadas possuem resumo operacional completo", () => {
+  const allSpells = [
+    ...PALADIN_SPELLS,
+    ...OATH_SPELLS,
+    ...LEGACY_EXTRA_SPELLS,
+  ];
+  for (const spell of allSpells) {
+    const detail = SPELL_DETAILS[spell.id];
+    assert.ok(detail, `Falta resumo para a magia: ${spell.id} (${spell.name})`);
+    assert.ok(detail.action.length > 0);
+    assert.ok(detail.range.length > 0);
+    assert.ok(detail.duration.length > 0);
+    assert.ok(detail.summary.length > 20);
+  }
 });

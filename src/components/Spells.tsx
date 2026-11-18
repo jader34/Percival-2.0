@@ -117,7 +117,7 @@ export function Spells({ state, sheet, act, open }: PanelProps) {
                   </div>
                   <p className="spell-meta">
                     {detail
-                      ? `${detail.action} · ${detail.range}${detail.concentration ? " · Concentração" : ""}`
+                      ? `${detail.action} · ${detail.range} · ${detail.duration}${detail.concentration ? " · Concentração" : ""}`
                       : "Consulte tempo, alcance e concentração no livro"}
                   </p>
                   <details>
