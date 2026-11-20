@@ -66,6 +66,14 @@ test("Smite vem antes dos detalhes secundários dos ataques", () => {
   assert.ok(html.indexOf("smite-action") < html.indexOf("weapon-row"));
 });
 
+test("reservas e espaços precedem a única montaria na ordem de leitura", () => {
+  const state = createAppState();
+  const html = renderToStaticMarkup(<Combat state={state} sheet={getSheet(state)} act={() => true} open={() => {}} />);
+  assert.ok(html.indexOf('resource-panel') < html.indexOf('mount-section'));
+  assert.ok(html.indexOf('slots-panel') < html.indexOf('mount-section'));
+  assert.equal(html.match(/class="mount-section"/g)?.length, 1);
+});
+
 test("retirar o manto gasto não mostra uma reserva negativa", () => {
   let state = applyAction(createAppState(), { type: "veil" });
   state = applyAction(state, {
@@ -82,6 +90,20 @@ test("retirar o manto gasto não mostra uma reserva negativa", () => {
     />,
   );
   assert.doesNotMatch(html, />-1\/1</);
+});
+
+test("metadados de magia e investida têm texto operacional de pelo menos 14px", () => {
+  const css = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  for (const selector of ["spell-meta", "mount-charge-note"]) {
+    const rule = css.match(new RegExp(`\\.${selector}\\s*\\{([^}]+)`))?.[1] ?? "";
+    assert.ok(Number(rule.match(/font-size:\s*(\d+)px/)?.[1]) >= 14, selector);
+    assert.match(rule, /line-height:\s*1\.6/);
+  }
+});
+
+test("o total de PV da montaria não quebra seus dígitos em telas estreitas", () => {
+  const css = readFileSync(new URL("../src/styles.css", import.meta.url), "utf8");
+  assert.match(css, /\.mount-hp-readout span\s*\{[^}]*white-space:\s*nowrap/);
 });
 
 test("o sangue anima a propriedade realmente alterada pelo indicador de vida", () => {
@@ -142,11 +164,24 @@ test("exibe ficha da montaria com Cota de talas, Dados de Vida e salvaguardas co
       sheet={getSheet(alive)}
       act={() => true}
       open={() => {}}
+      notes={alive.session.notes}
+      onNotesChange={() => {}}
+      onSaveNotes={() => {}}
     />,
   );
   assert.match(characterHtml, /Experiência/);
   assert.match(characterHtml, /18\.967/);
   assert.match(characterHtml, /Somar XP/);
+});
+
+test("notas exibem o rascunho do App e avisam que ainda não foi salvo", () => {
+  const state = createAppState();
+  const html = renderToStaticMarkup(<Character state={state} sheet={getSheet(state)}
+    act={() => true} open={() => {}} notes="Promessa ainda não registrada"
+    onNotesChange={() => {}} onSaveNotes={() => {}} />);
+  assert.match(html, /Promessa ainda não registrada<\/textarea>/);
+  assert.match(html, /role="status"[^>]*>Rascunho não salvo/);
+  assert.match(html, /aria-describedby="notes-status"/);
 });
 
 test("todas as magias catalogadas possuem resumo operacional completo", () => {

@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
 import { ArrowUpRight, Check, Feather, Plus, Shield } from "lucide-react";
 import type { Ability } from "../percival/types.ts";
 import type { PanelProps } from "./shared.ts";
 import { abilityNames, signed } from "./shared.ts";
-export function Character({ state, sheet, act, open }: PanelProps) {
-  const [notes, setNotes] = useState(state.session.notes);
-  useEffect(() => setNotes(state.session.notes), [state.session.notes]);
+type CharacterProps = PanelProps & {
+  notes: string;
+  onNotesChange: (value: string) => void;
+  onSaveNotes: () => void;
+};
+export function Character({ state, sheet, open, notes, onNotesChange, onSaveNotes }: CharacterProps) {
+  const notesDirty = notes !== state.session.notes;
   const nextXp = sheet.xp.nextLevelThreshold;
   const floorXp = sheet.xp.currentLevelThreshold;
   const xpRatio = nextXp
@@ -151,17 +154,21 @@ export function Character({ state, sheet, act, open }: PanelProps) {
         </label>
         <textarea
           id="session-notes"
+          aria-describedby="notes-status"
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) => onNotesChange(e.target.value)}
           placeholder="Nomes, promessas e dívidas que não devem ser esquecidos…"
           rows={5}
         />
+        <p id="notes-status" className="inline-note" role="status">
+          {notesDirty
+            ? "Rascunho não salvo · mantido ao trocar de aba. Salve antes de fechar ou recarregar."
+            : "Nenhuma alteração pendente nas notas."}
+        </p>
         <button
           className="button secondary"
-          disabled={notes === state.session.notes}
-          onClick={() =>
-            act({ type: "notes", value: notes }, "Notas salvas neste aparelho.")
-          }
+          disabled={!notesDirty}
+          onClick={onSaveNotes}
         >
           Salvar notas
         </button>

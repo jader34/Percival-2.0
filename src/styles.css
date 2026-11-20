@@ -739,6 +739,7 @@ details[open] > summary {
   line-height: 1;
 }
 .mount-hp-readout span {
+  white-space: nowrap;
   font-size: 13px;
   color: var(--muted);
   padding-left: 4px;
@@ -837,7 +838,8 @@ details[open] > summary {
   margin-top: 3px;
 }
 .mount-charge-note {
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.6;
   color: var(--muted);
   margin-top: 12px;
 }
@@ -1249,7 +1251,8 @@ button.resource-row:hover:not(:disabled) {
 }
 .spell-meta {
   color: var(--muted);
-  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.6;
   margin: 5px 0;
 }
 .spell-content summary {
@@ -2112,9 +2115,21 @@ button.resource-row:hover:not(:disabled) {
   .combat-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.5fr) minmax(250px, 1fr);
-    gap: 36px;
+    column-gap: 36px;
+    align-items: start;
+  }
+  .combat-primary {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .combat-layout > .mount-section {
+    grid-column: 1;
+    grid-row: 2;
   }
   .combat-secondary {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: stretch;
     margin-top: 0;
     border-left: 1px solid var(--line);
     padding-left: 28px;

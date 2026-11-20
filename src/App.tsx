@@ -131,6 +131,10 @@ function download(text: string, name: string) {
 export default function App() {
   const [initial] = useState(loadLocal);
   const [state, setState] = useState<AppState>(initial.state);
+  // Drafts survive panel unmounts without creating a history entry per keystroke.
+  const [notesDraft, setNotesDraft] = useState<string | null>(null);
+  const notes = notesDraft ?? state.session.notes;
+  const notesDirty = notes !== state.session.notes;
   const [storageIssue, setStorageIssue] = useState(initial.issue);
   const [blocked, setBlocked] = useState(!!initial.issue);
   const [tab, setTab] = useState<(typeof tabs)[number]["id"]>("combat");
@@ -140,6 +144,15 @@ export default function App() {
   );
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sheet = getSheet(state);
+  useEffect(() => {
+    if (!notesDirty && !storageIssue) return;
+    const warnBeforeLeaving = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warnBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", warnBeforeLeaving);
+  }, [notesDirty, storageIssue]);
   useEffect(() => {
     if (blocked) return;
     try {
@@ -211,11 +224,14 @@ export default function App() {
       const imported = parseCompatibleBackup(await file.text());
       if (
         !window.confirm(
-          "Substituir a ficha deste navegador pelo backup? Exporte sua sessão atual antes de continuar.",
+          notesDirty
+            ? "Há notas não salvas. Importar este backup descartará o rascunho. Continuar?"
+            : "Substituir a ficha deste navegador pelo backup? Exporte sua sessão atual antes de continuar.",
         )
       )
         return;
       setState(imported);
+      setNotesDraft(null);
       setBlocked(false);
       setDialog(null);
       notify("Backup validado e importado.");
@@ -282,9 +298,9 @@ export default function App() {
           </button>
         </header>
         <div className="session-toolbar">
-          <span className={`save-status ${storageIssue ? "has-error" : ""}`}>
+          <span className={`save-status ${storageIssue || notesDirty ? "has-error" : ""}`}>
             <i />
-            {storageIssue ? "Não salvo" : "Salvo neste aparelho"}
+            {storageIssue ? "Não salvo" : notesDirty ? "Notas não salvas" : "Salvo neste aparelho"}
           </span>
           <div>
             <button
@@ -320,7 +336,14 @@ export default function App() {
           {tab === "combat" && <Combat {...props} />}
           {tab === "spells" && <Spells {...props} />}
           {tab === "inventory" && <Inventory {...props} />}
-          {tab === "character" && <Character {...props} />}
+          {tab === "character" && <Character {...props}
+            notes={notes}
+            onNotesChange={(value) => setNotesDraft(value === state.session.notes ? null : value)}
+            onSaveNotes={() => {
+              if (act({ type: "notes", value: notes }, "Notas registradas.")) {
+                setNotesDraft(null);
+              }
+            }} />}
         </main>
         <footer className="page-footer">
           <span>O juramento permanece.</span>

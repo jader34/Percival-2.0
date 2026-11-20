@@ -406,6 +406,173 @@ export function Combat({ state, sheet, act, open }: PanelProps) {
             As duas habilidades compartilham Canalizar Divindade.
           </p>
         </section>
+      </div>
+      <aside className="combat-secondary" aria-label="Recursos da sessão">
+        <section className="resource-panel">
+          <div className="section-heading">
+            <h2>Reservas</h2>
+            <span>Restantes</span>
+          </div>
+          <button
+            className="resource-row"
+            disabled={hands <= 0 || s.hp === 0}
+            onClick={() => open({ kind: "hands" })}
+          >
+            <HandHeart size={20} />
+            <span>
+              <strong>Cura pelas Mãos</strong>
+              <small>Descanso longo</small>
+            </span>
+            <b>
+              {hands}
+              <small>/{sheet.resources.layOnHands.maximum}</small>
+            </b>
+          </button>
+          <button
+            className="resource-row"
+            disabled={hitDice <= 0}
+            onClick={() => open({ kind: "hit-dice" })}
+          >
+            <HeartPulse size={20} />
+            <span>
+              <strong>Dados de Vida</strong>
+              <small>
+                d10 {signed(sheet.modifiers.con)} · recupera até{" "}
+                {sheet.hitDice.longRestRecovery} no descanso longo
+              </small>
+            </span>
+            <b>
+              {hitDice}
+              <small>/{sheet.hitDice.maximum}</small>
+            </b>
+          </button>
+          <button
+            className="resource-row"
+            disabled={sense <= 0 || s.hp === 0}
+            onClick={() =>
+              act(
+                { type: "use-resource", resource: "divineSense" },
+                "Sentido Divino: um uso registrado.",
+              )
+            }
+          >
+            <Eye size={20} />
+            <span>
+              <strong>Sentido Divino</strong>
+              <small>Detectar a até 18 m</small>
+            </span>
+            <b>
+              {sense}
+              <small>/{sheet.resources.divineSense.maximum}</small>
+            </b>
+          </button>
+          <div className="resource-row">
+            <Droplets size={20} />
+            <span>
+              <strong>Canalizar Divindade</strong>
+              <small>Descanso curto ou longo</small>
+            </span>
+            <b>
+              {channel}
+              <small>/1</small>
+            </b>
+          </div>
+          {sheet.resources.amuletChannelDivinity.maximum > 0 && (
+            <div className="resource-row">
+              <Sparkles size={20} />
+              <span>
+                <strong>Amuleto do Devoto</strong>
+                <small>Recupera ao amanhecer</small>
+              </span>
+              <b>
+                {amulet}
+                <small>/1</small>
+              </b>
+            </div>
+          )}
+          <button
+            className={`resource-row ${s.effects.bloodVeil ? "is-active" : ""}`}
+            disabled={veil <= 0 || s.effects.bloodVeil}
+            onClick={() =>
+              act(
+                { type: "veil" },
+                "Véu de Sangue ativo: +2 CA e +2 em salvaguardas de Destreza.",
+              )
+            }
+          >
+            <Shield size={20} />
+            <span>
+              <strong>Véu de Sangue</strong>
+              <small>+2 CA · ação bônus · 1 min</small>
+            </span>
+            <b>{s.effects.bloodVeil ? "Ativo" : `${veil}/1`}</b>
+          </button>
+        </section>
+        <section className="slots-panel">
+          <div className="section-heading">
+            <h2>Espaços de magia</h2>
+            <button
+              className="text-button"
+              onClick={() => open({ kind: "rest" })}
+            >
+              Recuperar
+            </button>
+          </div>
+          {sheet.spellcasting.slots.map(
+            (maximum, index) =>
+              maximum > 0 && (
+                <div className="slot-row" key={index}>
+                  <span>{index + 1}º círculo</span>
+                  <div
+                    className="slot-pips"
+                    aria-label={`${maximum - s.slotsSpent[index]} de ${maximum} espaços restantes`}
+                  >
+                    {Array.from({ length: maximum }, (_, pip) => (
+                      <i
+                        key={pip}
+                        className={
+                          pip < maximum - s.slotsSpent[index] ? "filled" : ""
+                        }
+                      />
+                    ))}
+                  </div>
+                  <strong>
+                    {maximum - s.slotsSpent[index]}
+                    <small>/{maximum}</small>
+                  </strong>
+                </div>
+              ),
+          )}
+        </section>
+        <div className="aura-note">
+          <Shield size={26} strokeWidth={1.5} />
+          <div>
+            <strong>
+              Aura de Proteção <span>+{sheet.auras.protection.bonus}</span>
+            </strong>
+            <p>
+              {s.hp > 0
+                ? `Você e aliados a ${sheet.auras.protection.radiusMeters} m somam o bônus em salvaguardas.`
+                : "Sua aura está inativa enquanto estiver inconsciente."}
+            </p>
+          </div>
+        </div>
+        <section className="session-log">
+          <h2>Últimos registros</h2>
+          {state.log.length ? (
+            <ol>
+              {state.log.slice(0, 3).map((entry, i) => (
+                <li key={`${i}-${entry}`}>{entry}</li>
+              ))}
+            </ol>
+          ) : (
+            <p>
+              O próximo capítulo ainda está por escrever. Seus registros
+              aparecem aqui.
+            </p>
+          )}
+        </section>
+      </aside>
         <section className="mount-section" aria-label="Ficha da montaria">
           <div className="section-heading">
             <h2>Em sela</h2>
@@ -596,173 +763,6 @@ export function Combat({ state, sheet, act, open }: PanelProps) {
             </details>
           </div>
         </section>
-      </div>
-      <aside className="combat-secondary" aria-label="Recursos da sessão">
-        <section className="resource-panel">
-          <div className="section-heading">
-            <h2>Reservas</h2>
-            <span>Restantes</span>
-          </div>
-          <button
-            className="resource-row"
-            disabled={hands <= 0 || s.hp === 0}
-            onClick={() => open({ kind: "hands" })}
-          >
-            <HandHeart size={20} />
-            <span>
-              <strong>Cura pelas Mãos</strong>
-              <small>Descanso longo</small>
-            </span>
-            <b>
-              {hands}
-              <small>/{sheet.resources.layOnHands.maximum}</small>
-            </b>
-          </button>
-          <button
-            className="resource-row"
-            disabled={hitDice <= 0}
-            onClick={() => open({ kind: "hit-dice" })}
-          >
-            <HeartPulse size={20} />
-            <span>
-              <strong>Dados de Vida</strong>
-              <small>
-                d10 {signed(sheet.modifiers.con)} · recupera até{" "}
-                {sheet.hitDice.longRestRecovery} no descanso longo
-              </small>
-            </span>
-            <b>
-              {hitDice}
-              <small>/{sheet.hitDice.maximum}</small>
-            </b>
-          </button>
-          <button
-            className="resource-row"
-            disabled={sense <= 0 || s.hp === 0}
-            onClick={() =>
-              act(
-                { type: "use-resource", resource: "divineSense" },
-                "Sentido Divino: um uso registrado.",
-              )
-            }
-          >
-            <Eye size={20} />
-            <span>
-              <strong>Sentido Divino</strong>
-              <small>Detectar a até 18 m</small>
-            </span>
-            <b>
-              {sense}
-              <small>/{sheet.resources.divineSense.maximum}</small>
-            </b>
-          </button>
-          <div className="resource-row">
-            <Droplets size={20} />
-            <span>
-              <strong>Canalizar Divindade</strong>
-              <small>Descanso curto ou longo</small>
-            </span>
-            <b>
-              {channel}
-              <small>/1</small>
-            </b>
-          </div>
-          {sheet.resources.amuletChannelDivinity.maximum > 0 && (
-            <div className="resource-row">
-              <Sparkles size={20} />
-              <span>
-                <strong>Amuleto do Devoto</strong>
-                <small>Recupera ao amanhecer</small>
-              </span>
-              <b>
-                {amulet}
-                <small>/1</small>
-              </b>
-            </div>
-          )}
-          <button
-            className={`resource-row ${s.effects.bloodVeil ? "is-active" : ""}`}
-            disabled={veil <= 0 || s.effects.bloodVeil}
-            onClick={() =>
-              act(
-                { type: "veil" },
-                "Véu de Sangue ativo: +2 CA e +2 em salvaguardas de Destreza.",
-              )
-            }
-          >
-            <Shield size={20} />
-            <span>
-              <strong>Véu de Sangue</strong>
-              <small>+2 CA · ação bônus · 1 min</small>
-            </span>
-            <b>{s.effects.bloodVeil ? "Ativo" : `${veil}/1`}</b>
-          </button>
-        </section>
-        <section className="slots-panel">
-          <div className="section-heading">
-            <h2>Espaços de magia</h2>
-            <button
-              className="text-button"
-              onClick={() => open({ kind: "rest" })}
-            >
-              Recuperar
-            </button>
-          </div>
-          {sheet.spellcasting.slots.map(
-            (maximum, index) =>
-              maximum > 0 && (
-                <div className="slot-row" key={index}>
-                  <span>{index + 1}º círculo</span>
-                  <div
-                    className="slot-pips"
-                    aria-label={`${maximum - s.slotsSpent[index]} de ${maximum} espaços restantes`}
-                  >
-                    {Array.from({ length: maximum }, (_, pip) => (
-                      <i
-                        key={pip}
-                        className={
-                          pip < maximum - s.slotsSpent[index] ? "filled" : ""
-                        }
-                      />
-                    ))}
-                  </div>
-                  <strong>
-                    {maximum - s.slotsSpent[index]}
-                    <small>/{maximum}</small>
-                  </strong>
-                </div>
-              ),
-          )}
-        </section>
-        <div className="aura-note">
-          <Shield size={26} strokeWidth={1.5} />
-          <div>
-            <strong>
-              Aura de Proteção <span>+{sheet.auras.protection.bonus}</span>
-            </strong>
-            <p>
-              {s.hp > 0
-                ? `Você e aliados a ${sheet.auras.protection.radiusMeters} m somam o bônus em salvaguardas.`
-                : "Sua aura está inativa enquanto estiver inconsciente."}
-            </p>
-          </div>
-        </div>
-        <section className="session-log">
-          <h2>Últimos registros</h2>
-          {state.log.length ? (
-            <ol>
-              {state.log.slice(0, 3).map((entry, i) => (
-                <li key={`${i}-${entry}`}>{entry}</li>
-              ))}
-            </ol>
-          ) : (
-            <p>
-              O próximo capítulo ainda está por escrever. Seus registros
-              aparecem aqui.
-            </p>
-          )}
-        </section>
-      </aside>
     </div>
   );
 }
