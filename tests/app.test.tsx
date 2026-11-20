@@ -43,6 +43,15 @@ test("a primeira tela mostra Percival, vida e navegação mobile sem dados virtu
   assert.match(html, /aria-label="Navegação principal"/);
 });
 
+test("nuvem explica ativação segura, sem alegar sincronização no primeiro acesso", async () => {
+  const { default: App } = await import('../src/App.tsx');
+  const html = renderToStaticMarkup(<App />);
+  assert.match(html, /Entrar com Google/);
+  assert.match(html, /regras fechadas/);
+  assert.match(html, /Somente neste aparelho/);
+  assert.doesNotMatch(html, /Ficha sincronizada com a nuvem/);
+});
+
 test("a janela usa o cabeçalho e conteúdo estilizados para manter fechar acessível", () => {
   const html = renderToStaticMarkup(
     <Modal title="Dano" onClose={() => {}}>

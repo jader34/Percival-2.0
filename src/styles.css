@@ -1928,6 +1928,32 @@ button.resource-row:hover:not(:disabled) {
   background: #53202b;
   border-color: var(--red-light);
 }
+.cloud-panel {
+  border-block: 1px solid var(--line);
+  margin: 0 0 24px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.cloud-panel > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding-block: 8px;
+  color: var(--muted);
+}
+.cloud-panel > summary svg { flex-shrink: 0; color: var(--gold); }
+.cloud-summary-action { margin-left: auto; text-align: right; }
+.cloud-error > summary, .cloud-conflict > summary { color: var(--rose); }
+.cloud-content { padding: 4px 0 20px; }
+.cloud-content p { margin-bottom: 14px; overflow-wrap: anywhere; }
+.cloud-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-block: 12px; }
+.cloud-actions .button { white-space: normal; text-align: left; }
+.cloud-help, .cloud-recovery { color: var(--muted); }
+.cloud-recovery { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 8px; }
+.cloud-recovery summary { min-height: 44px; padding-block: 10px; }
+.cloud-recovery .button { display: flex; margin-top: 10px; }
+
 .skip-link {
   position: fixed;
   top: -100px;

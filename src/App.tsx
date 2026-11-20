@@ -11,6 +11,8 @@ import {
   Undo2,
   X,
 } from "lucide-react";
+import { CloudPanel } from "./components/CloudPanel.tsx";
+import { useCloud } from "./cloud/useCloud.ts";
 import { PERCIVAL } from "./percival/data.ts";
 import {
   applyAction,
@@ -143,6 +145,8 @@ export default function App() {
     null,
   );
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cloudPaused = notesDirty || blocked || !!storageIssue;
+  const cloud = useCloud(state, cloudPaused, STORAGE_KEY, setState);
   const sheet = getSheet(state);
   useEffect(() => {
     if (!notesDirty && !storageIssue) return;
@@ -323,6 +327,7 @@ export default function App() {
             </button>
           </div>
         </div>
+        <CloudPanel cloud={cloud} paused={cloudPaused} exportLocal={exportData} download={download} />
         {storageIssue && (
           <div role="alert" className="storage-warning">
             <p>{storageIssue}</p>

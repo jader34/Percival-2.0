@@ -31,7 +31,7 @@ npm run ficha    # consulta JSON do cadastro e das regras
 
 ## Dados e segurança
 
-O estado é salvo em `localStorage`, chave `percival-session-v1`, neste navegador e nesta origem. Outro navegador, porta ou aparelho tem seu próprio arquivo. Não há conta, Firebase, sincronização ou acesso à ficha antiga.
+O estado é salvo em `localStorage`, chave `percival-session-v1`, neste navegador e nesta origem. Outro navegador, porta ou aparelho tem seu próprio arquivo. A integração opcional Google Auth + Firebase Realtime Database está implementada, mas a rede vem **bloqueada por padrão** até substituir e testar as regras públicas. Consulte `FIREBASE.md` para ativação, conflitos, backups de recuperação e limites de verificação. Não há acesso à ficha antiga.
 
 Exporte periodicamente um backup em **Ajustes → Exportar backup**. Limpar os dados do navegador pode apagar a ficha local. Importar substitui a sessão atual mediante confirmação. Arquivos inválidos são rejeitados; um arquivo local ilegível não é sobrescrito automaticamente. Falhas de salvamento são avisadas. Evite operar a mesma origem em duas abas: quando outra aba altera a sessão, o salvamento desta aba é bloqueado até recuperação explícita.
 
