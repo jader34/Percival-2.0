@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { parseBackup, serialize } from '../session/state.ts';
 import type { AppState } from '../session/state.ts';
 import { FIREBASE_SYNC_ENABLED } from './config.ts';
@@ -77,7 +77,9 @@ export function useCloud(state: AppState, paused: boolean, storageKey: string, a
     };
   }, [attempt, storageKey]);
 
-  useEffect(() => { session.current?.update(serialize(state), paused); }, [state, paused]);
+  // Publish committed edits/draft guards before external listeners can act on
+  // the previous render. A passive effect leaves a window for unsafe adoption.
+  useLayoutEffect(() => { session.current?.update(serialize(state), paused); }, [state, paused]);
   const login = async () => {
     if (!client.current || authBusy) return;
     setAuthBusy(true);

@@ -20,7 +20,7 @@ export function CloudPanel({ cloud, paused, exportLocal, download }: Props) {
           : <button className="button secondary" disabled={!cloud.enabled || !cloud.ready || cloud.authBusy} onClick={() => void cloud.login()}><LogIn size={16} />{cloud.authBusy ? 'Aguardando Google…' : 'Entrar com Google'}</button>}
         {status.kind === 'error' && cloud.enabled && <button className="button secondary" onClick={cloud.retry}>Tentar novamente</button>}
       </div>
-      {cloud.enabled && <p className="cloud-help">A entrada fica salva neste navegador. Sair não apaga a ficha local. Use apenas em aparelhos de confiança.</p>}
+      {cloud.enabled && <p className="cloud-help">Atualizações de outros aparelhos chegam automaticamente quando não há edições locais nem notas em rascunho. Se as duas versões mudarem, você escolhe qual manter. A entrada fica salva neste navegador. Sair não apaga a ficha local. Use apenas em aparelhos de confiança.</p>}
       {(conflict || status.kind === 'migration') && <>
         <div className="cloud-actions">
           <button className="button secondary" onClick={exportLocal}><Download size={16} />Exportar ficha local</button>

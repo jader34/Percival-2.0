@@ -44,6 +44,15 @@ function harness(base = null) {
   return { sync, statuses, saved, archives, get writes() { return writes; }, get adopted() { return adopted; }, get stopped() { return stopped; },
     emit: value => { remote = value; receive(value); }, connect: value => connection(value) };
 }
+test('recebe atualização remota automaticamente quando a ficha local ainda é a base', () => {
+  const h = harness(env(1)); h.connect(true); h.emit(env(1));
+  h.emit(env(2, changed('outro aparelho')));
+  assert.equal(h.adopted, changed('outro aparelho'));
+  assert.deepEqual(h.archives, [raw()]);
+  assert.deepEqual(h.saved.at(-1), env(2, changed('outro aparelho')));
+  assert.equal(h.statuses.at(-1).kind, 'synced');
+  assert.equal(h.writes, 0);
+});
 test('controlador lê antes de enviar, migra por escolha e não perde edição offline', async () => {
   assert.equal(typeof api.SyncSession, 'function');
   const h = harness();
@@ -80,16 +89,17 @@ test('registro remoto inválido bloqueia novas escritas mesmo após reconexão',
 });
 test('evento mais novo recebido durante commit não é ocultado pela confirmação antiga', async () => {
   let receive, resolve;
-  const statuses = [];
+  const statuses = [], adopted = [];
   const session = new api.SyncSession({ local: changed('meu'), base: env(1),
-    status: s => statuses.push(s), saveBase: () => {}, archive: () => {}, adopt: () => {},
+    status: s => statuses.push(s), saveBase: () => {}, archive: () => {}, adopt: value => adopted.push(value),
     transport: { subscribe(value, connection) { receive = value; connection(true); return () => {}; },
       cas: () => new Promise(done => { resolve = done; }) } });
   session.start(); receive(env(1));
   receive(env(3, changed('mais novo')));
   resolve({ committed: true, value: env(2, changed('meu')) });
   await tick();
-  assert.equal(statuses.at(-1).kind, 'conflict');
+  assert.equal(statuses.at(-1).kind, 'synced');
+  assert.deepEqual(adopted, [changed('mais novo')]);
   assert.equal(session.remoteBackup(), changed('mais novo'));
 });
 test('edições durante envio são reenviadas sem perder o payload mais recente', async () => {

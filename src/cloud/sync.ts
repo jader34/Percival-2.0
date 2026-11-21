@@ -76,6 +76,7 @@ export class SyncSession {
     try {
       const decision = reconcile(this.local, this.base, this.remote);
       if (decision === 'synced') { this.remember(this.remote!); this.show('synced', 'Ficha sincronizada com a nuvem.'); }
+      else if (decision === 'pull') this.useRemote();
       else if (decision === 'push') void this.push(this.remote);
       else if (decision === 'migration') this.show('migration', 'Nenhuma ficha na nuvem. Envie a ficha deste aparelho quando estiver pronto.');
       else this.show('conflict', 'As versões são diferentes. Exporte as duas antes de escolher qual manter. Nada foi substituído.');
@@ -122,12 +123,14 @@ export class SyncSession {
   stop() { this.active = false; this.unsubscribe?.(); }
 }
 
-export type Decision = 'migration' | 'conflict' | 'push' | 'synced';
+export type Decision = 'migration' | 'conflict' | 'pull' | 'push' | 'synced';
 export function same(a: Envelope | null, b: Envelope | null): boolean {
   return a === b || !!(a && b && a.revision === b.revision && a.payload === b.payload);
 }
 export function reconcile(local: string, base: Envelope | null, remote: Envelope | null): Decision {
   if (!remote) return base ? 'conflict' : 'migration';
   if (local === remote.payload) return 'synced';
+  // Only a known, unchanged local base may receive a newer remote revision.
+  if (base && local === base.payload && remote.revision > base.revision) return 'pull';
   return base && same(base, remote) ? 'push' : 'conflict';
 }
