@@ -97,6 +97,36 @@ test('App aplica rajada remota uma vez por revisão e não reenvia estado antigo
   } finally { await act(async () => root.unmount()); }
 });
 
+test('App carrega save local antigo e recebe confirmação antiga da nuvem sem restaurar recursos', async () => {
+  localStorage.clear(); writes.length = 0;
+  let old = applyAction(createAppState(), { type: 'use-resource', resource: 'amuletChannelDivinity' });
+  old = applyAction(old, { type: 'hp', mode: 'damage', amount: 11 });
+  for (const snapshot of [old, ...old.history]) {
+    snapshot.record.equipment.find(i => i.id === 'amulet-of-the-devout')!.attuned = null;
+    snapshot.record.additionalSpellAccess = {};
+  }
+  const original = JSON.stringify(old);
+  localStorage.setItem('percival-session-v1', original);
+  localStorage.setItem('percival-cloud-base-test-owner', JSON.stringify({ revision: 1, payload: original }));
+  const root = createRoot(document.getElementById('root')!);
+  try {
+    await act(async () => root.render(<App />));
+    let saved = JSON.parse(localStorage.getItem('percival-session-v1')!);
+    assert.equal(saved.record.equipment.find((i: { id: string }) => i.id === 'amulet-of-the-devout').attuned, true);
+    assert.deepEqual(saved.session, old.session);
+    assert.equal(saved.history.length, old.history.length);
+    old.session.notes = 'Remoto preservado';
+    await act(async () => receive({ revision: 2, payload: JSON.stringify(old) }));
+    saved = JSON.parse(localStorage.getItem('percival-session-v1')!);
+    assert.equal(saved.session.notes, 'Remoto preservado');
+    assert.equal(saved.session.hp, 53);
+    assert.equal(saved.session.resourceSpent.amuletChannelDivinity, 1);
+    assert.equal(saved.record.additionalSpellAccess['gentle-repose'], true);
+    assert.equal(saved.history.length, old.history.length);
+    assert.equal(writes.length, 0);
+  } finally { await act(async () => root.unmount()); }
+});
+
 test('painel explica recepção automática e proteção de rascunhos', async () => {
   const root = await mount();
   try { assert.match(document.body.textContent!, /Atualizações de outros aparelhos chegam automaticamente quando não há edições locais nem notas em rascunho/); }

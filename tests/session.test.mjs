@@ -138,11 +138,12 @@ test('preparação e concessão validam cota e nunca removem magias do juramento
   state = act(state, 'prepare', { spellId: 'command' });
   state = act(state, 'prepare', { spellId: 'aid' });
   assert.equal(api.getSheet(state).spellcasting.preparedCount, 7);
-  state = act(state, 'grant-spell', { id: 'warding-bond', allowed: false });
+  assert.throws(() => act(state, 'grant-spell', { id: 'warding-bond', allowed: false }), /permanente/);
+  state = act(state, 'prepare', { spellId: 'warding-bond' });
   assert.equal(api.getSheet(state).spellcasting.preparedCount, 6);
   assert.throws(() => act(state, 'cast', { spellId: 'warding-bond', slotLevel: 2, concentration: false }), /preparada/);
-  state = act(state, 'prepare', { spellId: 'warding-bond' }); // remove entrada legada pendente
-  assert.throws(() => act(state, 'prepare', { spellId: 'warding-bond' }), /disponível/);
+  state = act(state, 'prepare', { spellId: 'warding-bond' });
+  assert.equal(api.getSheet(state).spellcasting.preparedCount, 7);
 });
 
 test('evolução usa d10 físico e escolha do motor sem curar ou restaurar gastos', () => {
@@ -168,14 +169,14 @@ test('evolução usa d10 físico e escolha do motor sem curar ou restaurar gasto
   assert.equal(state.record.xp, 18967);
 });
 
-test('inventário, notas e sintonização são reversíveis e não recarregam itens', () => {
+test('inventário e notas são reversíveis; sintonização permanente não recarrega itens', () => {
   let state = act(initial(), 'notes', { value: '<script>não executar()</script>' });
   assert.equal(state.session.notes, '<script>não executar()</script>');
   assert.throws(() => act(state, 'notes', { value: 5 }), /texto/);
   state = act(state, 'attunement', { value: true });
   assert.equal(api.getSheet(state).spellcasting.itemBonus, 1);
   state = act(state, 'use-resource', { resource: 'amuletChannelDivinity' });
-  state = act(state, 'attunement', { value: false });
+  assert.throws(() => act(state, 'attunement', { value: false }), /permanente/);
   state = act(state, 'attunement', { value: true });
   assert.throws(() => act(state, 'use-resource', { resource: 'amuletChannelDivinity' }), /insuficiente/);
   state = act(state, 'equipment', { id: 'plate', equipped: false });
@@ -229,7 +230,7 @@ test('descanso curto, longo e amanhecer recuperam somente seus recursos', () => 
 
 test('conjuração e destruição compartilham espaços; concentração substitui sem rolar dados', () => {
   let state = initial();
-  assert.throws(() => act(state, 'cast', { spellId: 'warding-bond', slotLevel: 2, concentration: false }), /preparada/);
+  assert.throws(() => act(state, 'cast', { spellId: 'prayer-of-healing', slotLevel: 2, concentration: false }), /preparada/);
   assert.throws(() => act(state, 'cast', { spellId: 'lesser-restoration', slotLevel: 1, concentration: false }), /círculo/);
   assert.throws(() => act(state, 'cast', { spellId: 'aid', slotLevel: 2, concentration: false }), /preparada/);
   assert.throws(() => act(state, 'cast', { spellId: 'bless', slotLevel: 1, concentration: 'true' }), /boolean/);
@@ -264,7 +265,8 @@ test('recursos e efeitos compartilham usos, exigem equipamento e encerram bênç
   for (let i = 0; i < 5; i++) state = act(state, 'use-resource', { resource: 'divineSense' });
   assert.throws(() => act(state, 'use-resource', { resource: 'divineSense' }), /insuficiente/);
   assert.throws(() => act(state, 'use-resource', { resource: 'toString' }), /inválid/);
-  assert.throws(() => act(state, 'blessing', { source: 'amulet' }), /insuficiente/);
+  const withoutAmulet = act(state, 'equipment', { id: 'amulet-of-the-devout', equipped: false });
+  assert.throws(() => act(withoutAmulet, 'blessing', { source: 'amulet' }), /insuficiente/);
   assert.throws(() => act(state, 'blessing', { source: 'oops' }), /inválid/);
   state = act(state, 'blessing', { source: 'class' });
   assert.equal(state.session.resourceSpent.channelDivinity, 1);

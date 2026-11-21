@@ -24,6 +24,26 @@ test('transporte valida backup e CAS recusa revisão concorrente e preserva vazi
   assert.equal(api.compareAndSwap(env(2), env(1), raw()), undefined);
   assert.equal(api.compareAndSwap(env(1, changed('trocado')), env(1), raw()), undefined);
 });
+test('confirmações permanentes não causam conflito falso nem alteram envelope CAS antigo', async () => {
+  const old = createAppState();
+  old.record.equipment.find(i => i.id === 'amulet-of-the-devout').attuned = false;
+  old.record.additionalSpellAccess = {};
+  const base = env(1, JSON.stringify(old));
+  assert.equal(api.reconcile(raw(), null, base), 'synced');
+  assert.deepEqual(api.decode(base), base, 'CAS precisa dos bytes remotos originais.');
+  assert.equal(api.reconcile(raw(), base, env(2, changed('remoto'))), 'pull');
+  assert.equal(api.reconcile(changed('local'), base, env(2, changed('remoto'))), 'conflict');
+  const h = harness(base); h.connect(true); h.emit(base);
+  for (let i = 0; i < 3; i++) { h.sync.update(raw(), false); h.emit(base); }
+  await tick();
+  assert.equal(h.writes, 0);
+  assert.equal(h.statuses.at(-1).kind, 'synced');
+  h.sync.update(changed('edição real'), false);
+  await tick();
+  assert.equal(h.writes, 1);
+  assert.equal(h.saved.at(-1).revision, 2);
+  assert.equal(h.statuses.at(-1).kind, 'synced');
+});
 const tick = () => new Promise(resolve => setImmediate(resolve));
 function harness(base = null) {
   let remote = base, receive, connection, writes = 0, adopted = null, stopped = false;

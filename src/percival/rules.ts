@@ -135,7 +135,10 @@ function spellcasting(record: PercivalRecord, level: number, charisma: number, p
     }
     return [{ ...spell }];
   });
-  if (preparedSpells.length > preparedLimit) throw new Error(`Limite de ${preparedLimit} magias preparadas excedido.`);
+  // Saves antigos podiam guardar concessões pendentes além da cota validada.
+  // Preserve essas seleções para correção explícita, sem descartar ficha/histórico.
+  const ordinaryPrepared = preparedSpells.filter(spell => !LEGACY_EXTRA_SPELLS.some(extra => extra.id === spell.id));
+  if (ordinaryPrepared.length > preparedLimit) throw new Error(`Limite de ${preparedLimit} magias preparadas excedido.`);
   return {
     ability: 'cha', baseSaveDC: 8 + proficiency + charisma, baseAttackBonus: proficiency + charisma,
     saveDC: 8 + proficiency + charisma + itemBonus, attackBonus: proficiency + charisma + itemBonus, itemBonus,
@@ -171,6 +174,8 @@ export function calculatePercival(record: PercivalRecord, context: CalculationCo
   const attackBonus = modifiers.str + proficiencyBonus + (blessingActive ? Math.max(1, modifiers.cha) : 0);
   const magic = spellcasting(record, level, modifiers.cha, proficiencyBonus, amuletActive ? 1 : 0);
   const warnings: { code: string; message: string }[] = [];
+  if (magic.preparedCount > magic.preparedLimit) warnings.push({ code: 'prepared-limit',
+    message: `As concessões confirmadas deixam ${magic.preparedCount} magias selecionadas para ${magic.preparedLimit} preparações. Desmarque o excesso em Magias antes de conjurar magias preparadas; nenhuma seleção foi removida.` });
   if (!record.creation.extraHumanSkill) warnings.push({ code: 'human-skill', message: 'Falta identificar a perícia adicional do humano variante; nenhuma foi inventada.' });
   if (!record.creation.racialAbilityBonuses) warnings.push({ code: 'racial-ability-history', message: 'Atributos atuais preservados; distribuição dos dois +1 raciais não informada. Não reaplicar bônus raciais.' });
   if (!record.creation.extraLanguage) warnings.push({ code: 'human-language', message: 'Idioma humano adicional não informado; Comum está garantido pelo livro.' });

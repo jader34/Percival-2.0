@@ -91,6 +91,7 @@ function equipped(record: PercivalRecord, id: string) {
 
 export function applyAction(state: AppState, action: Action): AppState {
   validateState(state);
+  state = confirmPercival(state);
   if (!action || typeof action !== 'object' || Array.isArray(action) || typeof action.type !== 'string') throw new Error('Ação inválida.');
   const next = structuredClone(state);
   const session = next.session;
@@ -198,6 +199,7 @@ export function applyAction(state: AppState, action: Action): AppState {
       if (prepared.includes(action.spellId)) next.record.preparedSpellIds = prepared.filter(id => id !== action.spellId);
       else {
         if (!sheet.spellcasting.availableSpells.some(spell => spell.id === action.spellId)) throw new Error('Magia não disponível para preparação.');
+        if (sheet.spellcasting.preparedCount >= sheet.spellcasting.preparedLimit) throw new Error(`Limite de ${sheet.spellcasting.preparedLimit} magias preparadas atingido. Desmarque uma preparação primeiro.`);
         prepared.push(action.spellId);
       }
       calculatePercival(next.record);
@@ -206,9 +208,8 @@ export function applyAction(state: AppState, action: Action): AppState {
     case 'grant-spell':
       boolean(action.allowed, 'Concessão');
       if (!LEGACY_EXTRA_SPELLS.some(spell => spell.id === action.id)) throw new Error('Concessão de magia inválida.');
-      next.record.additionalSpellAccess[action.id] = action.allowed;
-      calculatePercival(next.record);
-      break;
+      if (!action.allowed) throw new Error('Concessão permanente confirmada pela mesa.');
+      return state;
     case 'human-skill':
       if (typeof action.skill !== 'string' || !Object.hasOwn(sheet.skills, action.skill)) throw new Error('Perícia humana inválida.');
       next.record.creation.extraHumanSkill = action.skill;
@@ -232,21 +233,22 @@ export function applyAction(state: AppState, action: Action): AppState {
       if (typeof action.value !== 'string') throw new Error('Notas precisam ser texto.');
       session.notes = action.value;
       break;
+    case 'attunement':
+      boolean(action.value, 'Sintonização');
+      if (!action.value) throw new Error('Sintonização permanente confirmada pela mesa.');
+      return state;
     case 'equipment':
     case 'item-quantity':
-    case 'attunement': {
-      const id = action.type === 'attunement' ? 'amulet-of-the-devout' : action.id;
+    {
+      const id = action.id;
       const item = next.record.equipment.find(item => item.id === id);
       if (!item) throw new Error('Item não encontrado.');
       if (action.type === 'item-quantity') {
         integer(action.quantity, 'Quantidade do item');
         item.quantity = action.quantity;
-      } else if (action.type === 'equipment') {
+      } else {
         boolean(action.equipped, 'Equipado');
         item.equipped = action.equipped;
-      } else {
-        boolean(action.value, 'Sintonização');
-        item.attuned = action.value;
       }
       if (!equipped(next.record, 'halberd')) session.effects.bloodBlessing = false;
       if (!equipped(next.record, 'blood-veil-cloak')) session.effects.bloodVeil = false;
@@ -278,6 +280,10 @@ export function applyAction(state: AppState, action: Action): AppState {
       if (action.slotLevel === 0) throw new Error('Informe um círculo de 1 a 5.');
       if (action.type === 'cast') {
         boolean(action.concentration, 'Concentração');
+        if (sheet.spellcasting.preparedCount > sheet.spellcasting.preparedLimit
+          && !sheet.spellcasting.oathSpells.some(spell => spell.id === action.spellId)) {
+          throw new Error('Limite de magias preparadas excedido. Desmarque o excesso em Magias antes de conjurar.');
+        }
         const spell = [...sheet.spellcasting.preparedSpells, ...sheet.spellcasting.oathSpells].find(spell => spell.id === action.spellId);
         if (!spell) throw new Error('Magia não está preparada ou disponível pelo juramento.');
         if (spell.level > action.slotLevel) throw new Error('O círculo do espaço é insuficiente para esta magia.');
@@ -372,7 +378,7 @@ export function applyAction(state: AppState, action: Action): AppState {
 
 export function undo(state: AppState): AppState {
   validateState(state);
-  const next = structuredClone(state);
+  const next = confirmPercival(state);
   const snapshot = next.history.pop();
   if (!snapshot) return next;
   next.record = snapshot.record;
@@ -526,7 +532,20 @@ function validateState(value: unknown): asserts value is AppState {
 
 export function serialize(state: AppState): string {
   validateState(state);
-  return JSON.stringify(state);
+  return JSON.stringify(confirmPercival(state));
+}
+
+/** Confirmações permanentes da ficha exclusiva; não são ações nem recuperam recursos. */
+function confirmPercival(state: AppState): AppState {
+  const next = structuredClone(state);
+  for (const { record } of [next, ...next.history]) {
+    const amulet = record.equipment.find(item => item.id === 'amulet-of-the-devout');
+    if (amulet) amulet.attuned = true;
+    for (const id of ['warding-bond', 'prayer-of-healing', 'gentle-repose']) {
+      record.additionalSpellAccess[id] = true;
+    }
+  }
+  return next;
 }
 
 /** Importa somente o envelope v1; preserva e valida todos os snapshots (máximo 20). */
@@ -536,7 +555,9 @@ export function parseBackup(text: string): AppState {
   try { value = JSON.parse(text); }
   catch { throw new Error('Backup JSON inválido.'); }
   validateState(value);
-  return value;
+  const confirmed = confirmPercival(value);
+  validateState(confirmed);
+  return confirmed;
 }
 
 export function getSheet(state: AppState): ReturnType<typeof calculatePercival> {

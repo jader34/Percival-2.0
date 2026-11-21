@@ -14,6 +14,16 @@ const load = async (path) => {
 const rules = await load('../src/percival/rules.ts');
 const data = await load('../src/percival/data.ts');
 
+test('confirma permanentemente amuleto e acesso sem preparar ou ativar as três magias', () => {
+  assert.equal(data.PERCIVAL.equipment.find(i => i.id === 'amulet-of-the-devout').attuned, true);
+  for (const id of ['warding-bond', 'prayer-of-healing', 'gentle-repose']) {
+    assert.equal(data.PERCIVAL.additionalSpellAccess[id], true);
+    assert.ok(rules.calculatePercival(data.PERCIVAL).spellcasting.availableSpells.some(s => s.id === id));
+  }
+  assert.ok(!data.PERCIVAL.preparedSpellIds.includes('prayer-of-healing'));
+  assert.ok(!data.PERCIVAL.preparedSpellIds.includes('gentle-repose'));
+});
+
 test('calcula a ficha do nível 6 sem somar novamente o aumento de Carisma do nível 4', () => {
   assert.equal(typeof rules.calculatePercival, 'function', 'O motor da ficha ainda não existe.');
   const sheet = rules.calculatePercival(data.PERCIVAL);
@@ -101,11 +111,11 @@ const advanceTo = (target) => {
 test('deriva espaços e magias de juramento até o nível 20 sem consumir a cota de preparação', () => {
   const sheet6 = rules.calculatePercival(data.PERCIVAL);
   assert.ok(sheet6.spellcasting, 'Faltam os cálculos de conjuração.');
-  assert.equal(sheet6.spellcasting.saveDC, 15);
-  assert.equal(sheet6.spellcasting.attackBonus, 7);
+  assert.equal(sheet6.spellcasting.saveDC, 16);
+  assert.equal(sheet6.spellcasting.attackBonus, 8);
   assert.equal(sheet6.spellcasting.preparedLimit, 7);
-  assert.equal(sheet6.spellcasting.preparedCount, 6);
-  assert.deepEqual(sheet6.spellcasting.unresolvedPreparedSpellIds, ['warding-bond']);
+  assert.equal(sheet6.spellcasting.preparedCount, 7);
+  assert.deepEqual(sheet6.spellcasting.unresolvedPreparedSpellIds, []);
   assert.deepEqual(sheet6.spellcasting.oathSpells.map(s => s.id), ['bane', 'hunters-mark', 'hold-person', 'misty-step']);
   const slotsByLevel = [
     [4,2,0,0,0], [4,3,0,0,0], [4,3,0,0,0], [4,3,2,0,0], [4,3,2,0,0],
@@ -219,8 +229,8 @@ test('expõe dados não confirmados e recusa talentos sem automação em vez de 
   const sheet = rules.calculatePercival(data.PERCIVAL);
   const warnings = sheet.warnings.map(w => w.code);
   assert.ok(warnings.includes('human-skill'), 'A perícia humana ausente precisa ser sinalizada.');
-  assert.ok(warnings.includes('amulet-attunement'));
-  assert.ok(warnings.includes('extra-spell-warding-bond'));
+  assert.ok(!warnings.includes('amulet-attunement'));
+  assert.ok(!warnings.includes('extra-spell-warding-bond'));
   assert.equal(sheet.calculationStatus, 'needs-confirmation');
   assert.equal(sheet.xp.current, 18967);
   assert.equal(sheet.xp.nextLevelThreshold, 23000);
@@ -233,7 +243,7 @@ test('expõe dados não confirmados e recusa talentos sem automação em vez de 
   const sheet8 = rules.calculatePercival(at8, { bloodBlessingActive: true });
   assert.equal(sheet8.abilities.cha, 20);
   assert.equal(sheet8.spellcasting.preparedLimit, 9);
-  assert.equal(sheet8.spellcasting.saveDC, 16);
+  assert.equal(sheet8.spellcasting.saveDC, 17);
   assert.equal(sheet8.resources.divineSense.maximum, 6);
   assert.equal(sheet8.homebrew.bloodBlessing.attackBonus, 5);
   assert.throws(() => rules.levelUp(at7, { hitDieResult: 7, improvement: {

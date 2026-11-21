@@ -1,4 +1,4 @@
-import { parseBackup } from '../session/state.ts';
+import { parseBackup, serialize } from '../session/state.ts';
 
 export const MAX_PAYLOAD = 5_000_000;
 export function decode(value: unknown): Envelope | null {
@@ -129,8 +129,11 @@ export function same(a: Envelope | null, b: Envelope | null): boolean {
 }
 export function reconcile(local: string, base: Envelope | null, remote: Envelope | null): Decision {
   if (!remote) return base ? 'conflict' : 'migration';
-  if (local === remote.payload) return 'synced';
+  // Compare confirmed facts without rewriting the raw envelope used by CAS/backups.
+  const equivalent = (a: string, b: string) => a === b
+    || serialize(parseBackup(a)) === serialize(parseBackup(b));
+  if (equivalent(local, remote.payload)) return 'synced';
   // Only a known, unchanged local base may receive a newer remote revision.
-  if (base && local === base.payload && remote.revision > base.revision) return 'pull';
+  if (base && equivalent(local, base.payload) && remote.revision > base.revision) return 'pull';
   return base && same(base, remote) ? 'push' : 'conflict';
 }

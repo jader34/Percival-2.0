@@ -15,6 +15,19 @@ import {
 } from "../src/percival/tables.ts";
 import { applyAction, createAppState, getSheet } from "../src/session/state.ts";
 
+test("confirmações permanentes são informativas e não oferecem caixas revogáveis", () => {
+  const state = createAppState();
+  const html = renderToStaticMarkup(<ActionDialog state={state} sheet={getSheet(state)}
+    act={() => true} open={() => {}} dialog={{ kind: 'settings' }} close={() => {}}
+    exportData={() => {}} importData={() => {}} storageIssue={null} recover={() => {}} />);
+  assert.doesNotMatch(html, /type="checkbox"/);
+  for (const text of ['Confirmações permanentes', 'Percival está sintonizado com o Amuleto do Devoto +1',
+    'A mesa concedeu Vínculo Protetor', 'A mesa concedeu Oração Curativa', 'A mesa concedeu Repouso Tranquilo',
+    'não prepara nem conjura', 'Perícia adicional de humano variante', 'Ainda não confirmada']) {
+    assert.ok(html.includes(text), `Ausente: ${text}`);
+  }
+});
+
 test("a primeira tela mostra Percival, vida e navegação mobile sem dados virtuais", async () => {
   const component = await import("../src/App.tsx").catch(() => ({
     default: undefined,

@@ -33,8 +33,8 @@ export const PERCIVAL: PercivalRecord = {
     { id: 'plate', name: 'Armadura de Placas', quantity: 1, weightKg: 32.5, equipped: true, source: 'PHB:147',
       description: 'CA 18; Força 15; desvantagem em Furtividade. Não soma Destreza. Peso corrigido pela tabela local.' },
     { id: 'amulet-of-the-devout', name: 'Amuleto do Devoto (+1)', quantity: 1, weightKg: 1, equipped: true,
-      attuned: null, source: 'LEGACY:defaultData.ts:245-251',
-      description: 'Regra importada, fora do livro local: equipado E sintonizado, +1 na CD e no ataque de magia; um Canalizar Divindade adicional sem gastar o uso de classe, recuperado ao amanhecer. Sintonização ainda não confirmada.' },
+      attuned: true, source: 'LEGACY:defaultData.ts:245-251',
+      description: 'Regra importada, fora do livro local: equipado E sintonizado, +1 na CD e no ataque de magia; um Canalizar Divindade adicional sem gastar o uso de classe, recuperado ao amanhecer. Sintonização confirmada permanentemente pela mesa.' },
     { id: 'blood-veil-cloak', name: 'Manto do Véu de Sangue', quantity: 1, weightKg: 1.5, equipped: true,
       source: 'LEGACY:defaultData.ts:254-260',
       description: 'Regra de mesa importada: ação bônus, 1 minuto, 1 uso por descanso longo; meia cobertura (+2 CA, +2 salvaguardas de Destreza), incluindo aliados a 1,5 m. Não soma coberturas repetidas.' },
@@ -50,8 +50,8 @@ export const PERCIVAL: PercivalRecord = {
     'bless', 'command', 'cure-wounds', 'thunderous-smite', 'shield-of-faith',
     'lesser-restoration', 'warding-bond',
   ],
-  // Preservadas para conferência; não pertencem à lista de paladino do livro local.
-  additionalSpellAccess: { 'warding-bond': null, 'prayer-of-healing': null, 'gentle-repose': null },
+  // Acesso permanente concedido pela mesa; preparação continua dentro da cota.
+  additionalSpellAccess: { 'warding-bond': true, 'prayer-of-healing': true, 'gentle-repose': true },
   oath: {
     id: 'blood',
     spellList: 'vengeance',

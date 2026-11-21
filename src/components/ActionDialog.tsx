@@ -968,46 +968,17 @@ export function ActionDialog({
               </button>
             </div>
           )}
-          <h3 className="dialog-subheading">Confirmações da ficha</h3>
-          <label className="checkbox-row">
-            <input
-              type="checkbox"
-              checked={
-                state.record.equipment.find(
-                  (x) => x.id === "amulet-of-the-devout",
-                )?.attuned === true
-              }
-              onChange={(e) =>
-                act(
-                  { type: "attunement", value: e.target.checked },
-                  "Sintonização atualizada.",
-                )
-              }
-            />
-            Percival está sintonizado com o Amuleto do Devoto +1
-          </label>
+          <h3 className="dialog-subheading">Confirmações permanentes</h3>
           <p className="caption">
-            Somente confirme regras realmente aprovadas pela mesa.
+            Confirmadas pela mesa para esta ficha. O acesso não prepara nem conjura
+            magias automaticamente e não recupera recursos gastos.
           </p>
-          {Object.entries({
-            "warding-bond": "Vínculo Protetor",
-            "prayer-of-healing": "Oração Curativa",
-            "gentle-repose": "Repouso Tranquilo",
-          }).map(([id, name]) => (
-            <label className="checkbox-row" key={id}>
-              <input
-                type="checkbox"
-                checked={state.record.additionalSpellAccess[id] === true}
-                onChange={(e) =>
-                  act(
-                    { type: "grant-spell", id, allowed: e.target.checked },
-                    "Acesso à magia atualizado.",
-                  )
-                }
-              />
-              A mesa concedeu {name}
-            </label>
-          ))}
+          <ul>
+            <li>Percival está sintonizado com o Amuleto do Devoto +1</li>
+            <li>A mesa concedeu Vínculo Protetor</li>
+            <li>A mesa concedeu Oração Curativa</li>
+            <li>A mesa concedeu Repouso Tranquilo</li>
+          </ul>
           <label className="field-label" htmlFor="human-skill">
             Perícia adicional de humano variante
           </label>
