@@ -2,6 +2,42 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createAppState, parseBackup, serialize, applyAction, undo, getSheet } from '../src/session/state.ts';
 
+test('ficha inicial confirma Percepção humana com bônus +4 e passiva 14', () => {
+  const state = createAppState();
+  const sheet = getSheet(state);
+  assert.equal(state.record.creation.extraHumanSkill, 'perception');
+  assert.equal(sheet.skills.perception.proficient, true);
+  assert.equal(sheet.skills.perception.bonus, 4);
+  assert.equal(sheet.passivePerception, 14);
+  assert.ok(!sheet.warnings.some(w => w.code === 'human-skill'));
+});
+
+test('Percepção preenche saves sem escolha e histórico sem perder sessão ou escolhas explícitas', () => {
+  let old = applyAction(createAppState(), { type: 'hp', mode: 'damage', amount: 13 });
+  old = applyAction(old, { type: 'smite', slotLevel: 1 });
+  old = applyAction(old, { type: 'notes', value: 'Manter recursos e histórico.' });
+  for (const snapshot of [old, ...old.history]) snapshot.record.creation.extraHumanSkill = null;
+  old.history[0].record.creation.extraHumanSkill = 'stealth';
+  const before = structuredClone(old);
+  const expected = structuredClone(old);
+  for (const snapshot of [expected, ...expected.history]) {
+    if (snapshot.record.creation.extraHumanSkill === null) snapshot.record.creation.extraHumanSkill = 'perception';
+  }
+  const migrated = parseBackup(JSON.stringify(old));
+  assert.deepEqual(migrated, expected);
+  assert.deepEqual(old, before);
+  assert.equal(serialize(old), serialize(migrated));
+  assert.deepEqual(parseBackup(serialize(migrated)), migrated);
+  assert.equal(getSheet(migrated).skills.perception.bonus, 4);
+  assert.equal(getSheet(migrated).passivePerception, 14);
+  assert.equal(undo(old).record.creation.extraHumanSkill, 'perception');
+  assert.deepEqual(undo(old).session, old.history.at(-1).session);
+  assert.equal(applyAction(old, { type: 'notes', value: 'Nova nota' }).record.creation.extraHumanSkill, 'perception');
+  const chosen = applyAction(migrated, { type: 'human-skill', skill: 'stealth' });
+  assert.equal(parseBackup(serialize(chosen)).record.creation.extraHumanSkill, 'stealth');
+  assert.equal(undo(chosen).record.creation.extraHumanSkill, 'perception');
+});
+
 const granted = ['warding-bond', 'prayer-of-healing', 'gentle-repose'];
 function legacyState() {
   let state = createAppState();

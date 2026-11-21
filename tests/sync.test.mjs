@@ -24,8 +24,9 @@ test('transporte valida backup e CAS recusa revisão concorrente e preserva vazi
   assert.equal(api.compareAndSwap(env(2), env(1), raw()), undefined);
   assert.equal(api.compareAndSwap(env(1, changed('trocado')), env(1), raw()), undefined);
 });
-test('confirmações permanentes não causam conflito falso nem alteram envelope CAS antigo', async () => {
+test('confirmações de amuleto, magias e Percepção não causam conflito falso nem alteram envelope CAS antigo', async () => {
   const old = createAppState();
+  old.record.creation.extraHumanSkill = null;
   old.record.equipment.find(i => i.id === 'amulet-of-the-devout').attuned = false;
   old.record.additionalSpellAccess = {};
   const base = env(1, JSON.stringify(old));

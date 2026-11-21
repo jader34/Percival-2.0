@@ -20,7 +20,7 @@ export const PERCIVAL: PercivalRecord = {
   creation: {
     feat: 'polearm-master',
     racialAbilityBonuses: null,
-    extraHumanSkill: null,
+    extraHumanSkill: 'perception',
     extraLanguage: null,
     gamingSet: null,
     level4Improvement: { cha: 2 },

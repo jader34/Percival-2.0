@@ -535,10 +535,12 @@ export function serialize(state: AppState): string {
   return JSON.stringify(confirmPercival(state));
 }
 
-/** Confirmações permanentes da ficha exclusiva; não são ações nem recuperam recursos. */
+/** Normaliza confirmações da ficha exclusiva sem criar ações ou recuperar recursos. */
 function confirmPercival(state: AppState): AppState {
   const next = structuredClone(state);
   for (const { record } of [next, ...next.history]) {
+    // Escolhas explícitas continuam editáveis; só preenche a pendência dos saves antigos.
+    if (record.creation.extraHumanSkill === null) record.creation.extraHumanSkill = 'perception';
     const amulet = record.equipment.find(item => item.id === 'amulet-of-the-devout');
     if (amulet) amulet.attuned = true;
     for (const id of ['warding-bond', 'prayer-of-healing', 'gentle-repose']) {

@@ -35,7 +35,7 @@ test('calcula a ficha do nível 6 sem somar novamente o aumento de Carisma do n�
   assert.equal(sheet.hpMax, 64);
   assert.equal(sheet.armorClass, 18);
   assert.equal(sheet.initiative, 0);
-  assert.equal(sheet.passivePerception, 11);
+  assert.equal(sheet.passivePerception, 14);
   assert.equal(sheet.attacks.halberd.toHit, 6);
   assert.equal(sheet.attacks.halberd.damage, '1d10 + 3');
   assert.equal(sheet.attacks.polearmButt.damage, '1d4 + 3');
@@ -228,7 +228,10 @@ test('informa dados físicos de Destruição Divina respeitando círculo, teto, 
 test('expõe dados não confirmados e recusa talentos sem automação em vez de inventar efeitos', () => {
   const sheet = rules.calculatePercival(data.PERCIVAL);
   const warnings = sheet.warnings.map(w => w.code);
-  assert.ok(warnings.includes('human-skill'), 'A perícia humana ausente precisa ser sinalizada.');
+  assert.ok(!warnings.includes('human-skill'), 'Percepção já foi confirmada.');
+  const unconfirmed = structuredClone(data.PERCIVAL);
+  unconfirmed.creation.extraHumanSkill = null;
+  assert.ok(rules.calculatePercival(unconfirmed).warnings.some(w => w.code === 'human-skill'));
   assert.ok(!warnings.includes('amulet-attunement'));
   assert.ok(!warnings.includes('extra-spell-warding-bond'));
   assert.equal(sheet.calculationStatus, 'needs-confirmation');
