@@ -61,6 +61,7 @@ export type Action =
   | { type: 'end-concentration' }
   | { type: 'rest'; kind: 'short' | 'long' | 'dawn' }
   | { type: 'xp'; mode: 'add' | 'set'; amount: number }
+  | { type: 'coins'; mode: 'receive' | 'spend'; coin: keyof PercivalRecord['coins']; amount: number }
   | { type: 'notes'; value: string }
   | { type: 'item-quantity'; id: string; quantity: number }
   | { type: 'equipment'; id: string; equipped: boolean }
@@ -102,6 +103,16 @@ export function applyAction(state: AppState, action: Action): AppState {
     session.resourceSpent[resource] += amount;
   };
   switch (action.type) {
+    case 'coins': {
+      if (!Object.hasOwn(next.record.coins, action.coin)) throw new Error('Moeda inválida.');
+      if (!['receive', 'spend'].includes(action.mode)) throw new Error('Operação de moedas inválida.');
+      rangedInteger(action.amount, 1, Number.MAX_SAFE_INTEGER, 'Quantidade de moedas');
+      const balance = next.record.coins[action.coin];
+      if (action.mode === 'spend' && action.amount > balance) throw new Error('Saldo insuficiente nesta moeda.');
+      if (action.mode === 'receive' && action.amount > Number.MAX_SAFE_INTEGER - balance) throw new Error('O saldo ultrapassaria o limite seguro de moedas.');
+      next.record.coins[action.coin] = balance + (action.mode === 'receive' ? action.amount : -action.amount);
+      break;
+    }
     case 'potion': {
       integer(action.healing, 'Cura física');
       const potion = next.record.equipment.find(item => item.id === 'greater-healing-potion');
@@ -367,12 +378,14 @@ export function applyAction(state: AppState, action: Action): AppState {
     'lay-on-hands': 'Impor as Mãos', 'use-resource': 'Recurso utilizado',
     blessing: 'Bênção de Sangue ativada', veil: 'Véu de Sangue ativado', 'end-effect': 'Efeito encerrado',
     cast: 'Magia conjurada', smite: 'Destruição Divina', 'end-concentration': 'Concentração encerrada',
-    rest: 'Descanso registrado', xp: 'XP atualizado', notes: 'Notas atualizadas', 'item-quantity': 'Quantidade atualizada',
+    rest: 'Descanso registrado', xp: 'XP atualizado', coins: 'Moedas atualizadas', notes: 'Notas atualizadas', 'item-quantity': 'Quantidade atualizada',
     equipment: 'Equipamento atualizado', attunement: 'Sintonização atualizada', prepare: 'Preparação atualizada',
     'level-up': 'Nível elevado', 'human-skill': 'Perícia humana registrada', 'grant-spell': 'Concessão atualizada',
     potion: 'Poção de cura consumida',
   };
-  next.log.unshift(`${labels[action.type]}.`);
+  next.log.unshift(action.type === 'coins'
+    ? `${action.mode === 'receive' ? 'Recebido' : 'Gasto'}: ${action.amount} de ${{ gp: 'ouro', sp: 'prata', cp: 'cobre' }[action.coin]}. Saldo: ${next.record.coins[action.coin]}.`
+    : `${labels[action.type]}.`);
   return next;
 }
 

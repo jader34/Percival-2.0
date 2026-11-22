@@ -1348,6 +1348,19 @@ button.resource-row:hover:not(:disabled) {
   font-size: 11px;
   color: var(--muted);
 }
+.coin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.coin-actions > button { flex: 1 1 140px; }
+.coin-strip { flex-wrap: wrap; }
+.coin-strip > div { min-width: 0; max-width: 100%; }
+.coin-strip strong { overflow-wrap: anywhere; }
+.coin-amount { font-size: clamp(20px, 5vw, 32px); }
+.coin-preview { flex-wrap: wrap; }
+.coin-preview strong { overflow-wrap: anywhere; min-width: 0; }
 .inventory-item {
   border-bottom: 1px solid var(--line);
   padding: 22px 0;

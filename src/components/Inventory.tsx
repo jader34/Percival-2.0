@@ -33,6 +33,14 @@ export function Inventory({ state, sheet, act, open }: PanelProps) {
           <span>cobre</span>
         </div>
       </div>
+      <div className="coin-actions">
+        <button className="button secondary" onClick={() => open({ kind: "coins", mode: "receive" })}>
+          <Plus size={18} aria-hidden="true" />Receber moedas
+        </button>
+        <button className="button secondary" onClick={() => open({ kind: "coins", mode: "spend" })}>
+          <Minus size={18} aria-hidden="true" />Gastar moedas
+        </button>
+      </div>
       <p className="caption">
         Inventário inicial importado do cadastro antigo. Confira as quantidades
         com sua mesa.
@@ -71,7 +79,7 @@ export function Inventory({ state, sheet, act, open }: PanelProps) {
                           id: item.id,
                           equipped: !item.equipped,
                         },
-                        item.equipped ? "Item desequipado." : "Item equipado.",
+                        `${item.name}: ${item.equipped ? "desequipado" : "equipado"}.`,
                       )
                     }
                   >
@@ -91,7 +99,7 @@ export function Inventory({ state, sheet, act, open }: PanelProps) {
                         type: "item-quantity",
                         id: item.id,
                         quantity: item.quantity - 1,
-                      })
+                      }, `${item.name}: quantidade ${item.quantity - 1}.`)
                     }
                   >
                     <Minus size={15} />
@@ -104,7 +112,7 @@ export function Inventory({ state, sheet, act, open }: PanelProps) {
                         type: "item-quantity",
                         id: item.id,
                         quantity: item.quantity + 1,
-                      })
+                      }, `${item.name}: quantidade ${item.quantity + 1}.`)
                     }
                   >
                     <Plus size={15} />

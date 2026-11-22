@@ -6,6 +6,7 @@ import { Modal } from "./Modal.tsx";
 import { abilityNames, signed } from "./shared.ts";
 import type { Dialog, PanelProps, SessionAction } from "./shared.ts";
 import { SPELL_DETAILS } from "./spellDetails.ts";
+import { CoinTransaction } from "./CoinTransaction.tsx";
 
 interface Props extends PanelProps {
   dialog: Dialog;
@@ -31,6 +32,7 @@ const titles: Record<Dialog["kind"], string> = {
   absorb: "Absorver Vitalidade",
   rest: "Pausa na jornada",
   xp: "Experiência (XP)",
+  coins: "Registrar moedas",
   settings: "Sua ficha, seu aparelho",
   level: "Um novo capítulo",
   potion: "Poção de Cura Maior",
@@ -206,7 +208,8 @@ export function ActionDialog({
     </fieldset>
   );
   return (
-    <Modal title={spell?.name ?? titles[dialog.kind]} onClose={close}>
+    <Modal title={dialog.kind === "coins" ? (dialog.mode === "receive" ? "Receber moedas" : "Gastar moedas") : spell?.name ?? titles[dialog.kind]} onClose={close}>
+      {dialog.kind === "coins" && <CoinTransaction state={state} mode={dialog.mode} submit={submit} />}
       {feedback && (
         <p
           className="dialog-feedback"

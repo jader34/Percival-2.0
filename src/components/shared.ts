@@ -22,6 +22,7 @@ export type Dialog =
         | "level"
         | "potion";
     }
+  | { kind: "coins"; mode: "receive" | "spend" }
   | { kind: "spell"; id: string };
 export interface PanelProps {
   state: AppState;

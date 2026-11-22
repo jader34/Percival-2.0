@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createAppState, serialize, applyAction } from '../src/session/state.ts';
+import { createAppState, serialize, applyAction, parseBackup, undo } from '../src/session/state.ts';
 import { SyncSession, compareAndSwap, decode, reconcile } from '../src/cloud/sync.ts';
 
 const original = serialize(createAppState());
@@ -65,6 +65,22 @@ test('dois aparelhos recebem alterações sequenciais sem escolha nem eco de esc
   assert.equal(pc.statuses.at(-1).kind, 'synced'); assert.equal(phone.statuses.at(-1).kind, 'synced');
   assert.deepEqual(phone.disk.archives, [original]);
   assert.deepEqual(pc.disk.archives, [notes('PC')]);
+});
+
+test('moedas recebidas, gastas e desfeitas sincronizam automaticamente entre aparelhos simulados', async () => {
+  const s = server(), pc = s.device(), phone = s.device();
+  const received = applyAction(createAppState(), { type: 'coins', mode: 'receive', coin: 'gp', amount: 9 });
+  pc.edit(serialize(received)); s.commit(); await tick();
+  assert.deepEqual(parseBackup(phone.disk.local), received);
+  const spent = applyAction(parseBackup(phone.disk.local), { type: 'coins', mode: 'spend', coin: 'cp', amount: 3 });
+  phone.edit(serialize(spent)); s.commit(); await tick();
+  assert.deepEqual(parseBackup(pc.disk.local), spent);
+  const undone = undo(parseBackup(pc.disk.local));
+  pc.edit(serialize(undone)); s.commit(); await tick();
+  assert.deepEqual(parseBackup(phone.disk.local), undone);
+  assert.equal(s.pending.length, 0);
+  assert.equal(phone.statuses.at(-1).kind, 'synced');
+  pc.sync.stop(); phone.sync.stop();
 });
 
 test('base persistida permite receber após reiniciar; sem base não destrói ficha diferente', () => {
